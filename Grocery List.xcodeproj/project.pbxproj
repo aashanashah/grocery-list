@@ -14,6 +14,9 @@
 		D15B15C11FB16855002047EF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D15B15BF1FB16855002047EF /* LaunchScreen.storyboard */; };
 		D15B15CC1FB16855002047EF /* Grocery_ListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15B15CB1FB16855002047EF /* Grocery_ListTests.swift */; };
 		D15B15D71FB16855002047EF /* Grocery_ListUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15B15D61FB16855002047EF /* Grocery_ListUITests.swift */; };
+		D15B15E71FB29563002047EF /* ListItemsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15B15E61FB29563002047EF /* ListItemsViewController.swift */; };
+		D15B15E91FB29AF6002047EF /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15B15E81FB29AF6002047EF /* MapViewController.swift */; };
+		D15B15EB1FB2B926002047EF /* ListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15B15EA1FB2B926002047EF /* ListTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +50,9 @@
 		D15B15D21FB16855002047EF /* Grocery ListUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Grocery ListUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D15B15D61FB16855002047EF /* Grocery_ListUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Grocery_ListUITests.swift; sourceTree = "<group>"; };
 		D15B15D81FB16855002047EF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D15B15E61FB29563002047EF /* ListItemsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListItemsViewController.swift; sourceTree = "<group>"; };
+		D15B15E81FB29AF6002047EF /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		D15B15EA1FB2B926002047EF /* ListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,7 +105,10 @@
 			children = (
 				D15B15B61FB16855002047EF /* AppDelegate.swift */,
 				D15B15B81FB16855002047EF /* ViewController.swift */,
+				D15B15E81FB29AF6002047EF /* MapViewController.swift */,
 				D15B15BA1FB16855002047EF /* Main.storyboard */,
+				D15B15EA1FB2B926002047EF /* ListTableViewCell.swift */,
+				D15B15E61FB29563002047EF /* ListItemsViewController.swift */,
 				D15B15BD1FB16855002047EF /* Assets.xcassets */,
 				D15B15BF1FB16855002047EF /* LaunchScreen.storyboard */,
 				D15B15C21FB16855002047EF /* Info.plist */,
@@ -260,7 +269,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				D15B15B91FB16855002047EF /* ViewController.swift in Sources */,
+				D15B15E71FB29563002047EF /* ListItemsViewController.swift in Sources */,
 				D15B15B71FB16855002047EF /* AppDelegate.swift in Sources */,
+				D15B15E91FB29AF6002047EF /* MapViewController.swift in Sources */,
+				D15B15EB1FB2B926002047EF /* ListTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
