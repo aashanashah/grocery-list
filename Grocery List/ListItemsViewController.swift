@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class ListItemsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet var locationButton : UIButton!
@@ -14,6 +15,9 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
     @IBOutlet var listTable : UITableView!
     @IBOutlet var addItems : UIButton!
     @IBOutlet var addImage : UIImageView!
+    @IBOutlet var listName : UITextField!
+    
+    
     var cellReuseIdentifier = "ListTableViewCell"
     var list = [""]
     
@@ -33,6 +37,7 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
         addItems.isHidden = false
         addImage.isHidden = false
         listTable.isHidden = true
+        
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
@@ -92,10 +97,38 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
             }
         }
     }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
+    {
+        return 100.0
+    }
     @IBAction func clickAdd(sender : UIButton)
     {
         addItems.isHidden = true
         addImage.isHidden = true
         listTable.isHidden = false
+    }
+    @IBAction func updateList(sender : UIButton)
+    {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        
+        let entityList =  NSEntityDescription.entity(forEntityName: "List", in: appDelegate.managedObjectContext!)
+        
+        let list = NSManagedObject(entity: entityList!, insertInto: appDelegate.managedObjectContext)
+        let entityItem =  NSEntityDescription.entity(forEntityName: "Items", in: appDelegate.managedObjectContext!)
+        
+        let item = NSManagedObject(entity: entityItem!, insertInto: appDelegate.managedObjectContext)
+        list.setValue(listName.text, forKey: "name")
+        list.setValue(1, forKey: "id")
+        item.setValue(1, forKey: "id")
+        item.setValue("aa", forKey: "item")
+        item.setValue(3, forKey: "qty")
+        do {
+            try appDelegate.managedObjectContext?.save()
+            print("saved!")
+        } catch let error as NSError  {
+            print("Could not save \(error), \(error.userInfo)")
+        } catch {
+            
+        }
     }
 }

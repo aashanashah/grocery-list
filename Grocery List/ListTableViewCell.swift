@@ -11,9 +11,13 @@ import UIKit
 class ListTableViewCell: UITableViewCell {
     @IBOutlet var listText : UITextField!
     @IBOutlet var addButton : UIButton!
+    @IBOutlet var stepper : UIStepper!
+    @IBOutlet var count : UITextField!
 
     override func awakeFromNib() {
         super.awakeFromNib()
+        stepper.wraps = true
+        stepper.autorepeat = true
         // Initialization code
     }
 
@@ -21,6 +25,9 @@ class ListTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
+    }
+    @IBAction func stepperValueChanged(sender: UIStepper) {
+        count.text = Int(sender.value).description
     }
 
 }

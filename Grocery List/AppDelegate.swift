@@ -7,11 +7,16 @@
 //
 
 import UIKit
+import CoreData
+import Foundation
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    var coreDataManager: CoreDataManager?
+    var managedObjectContext: NSManagedObjectContext?
+   
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
@@ -20,6 +25,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let homeViewController = mainStoryboard.instantiateViewController(withIdentifier: "ViewController") as! ViewController
         let nav = UINavigationController(rootViewController: homeViewController)
         appdelegate.window!.rootViewController = nav // For use in foreground
+        coreDataManager = CoreDataManager(modelName: "Grocery")
+        managedObjectContext = coreDataManager?.managedObjectContext
         // Override point for customization after application launch.
         return true
     }
