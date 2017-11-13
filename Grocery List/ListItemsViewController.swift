@@ -20,6 +20,7 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
     
     var cellReuseIdentifier = "ListTableViewCell"
     var list = [""]
+    var count = 1
     
 
     override func viewDidLoad() {
@@ -109,6 +110,7 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     @IBAction func updateList(sender : UIButton)
     {
+        retrievedata()
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         
         let entityList =  NSEntityDescription.entity(forEntityName: "List", in: appDelegate.managedObjectContext!)
@@ -118,8 +120,9 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
         
         let item = NSManagedObject(entity: entityItem!, insertInto: appDelegate.managedObjectContext)
         list.setValue(listName.text, forKey: "name")
-        list.setValue(1, forKey: "id")
-        item.setValue(1, forKey: "id")
+        print(count)
+        list.setValue(count, forKey: "id")
+        item.setValue(count, forKey: "id")
         item.setValue("aa", forKey: "item")
         item.setValue(3, forKey: "qty")
         do {
@@ -130,5 +133,27 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
         } catch {
             
         }
+    }
+    func retrievedata()
+    {
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            let request:NSFetchRequest<List>
+            request = NSFetchRequest<List>(entityName: "List")
+            do
+            {
+                let entities = try appDelegate.managedObjectContext?.fetch(request)
+                for item in entities!
+                {
+                    for key in item.entity.attributesByName.keys
+                    {
+                        if key == "id" && item.value(forKey: key) != nil
+                        {
+                            count += 1
+                        }
+                    }
+                }
+            }catch{
+                print("Unable to retrieve data")
+            }
     }
 }

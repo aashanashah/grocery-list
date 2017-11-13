@@ -18,6 +18,7 @@
 		D15B15E71FB29563002047EF /* ListItemsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15B15E61FB29563002047EF /* ListItemsViewController.swift */; };
 		D15B15E91FB29AF6002047EF /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15B15E81FB29AF6002047EF /* MapViewController.swift */; };
 		D15B15EB1FB2B926002047EF /* ListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15B15EA1FB2B926002047EF /* ListTableViewCell.swift */; };
+		D1A0BC741FBA2E590056BFD0 /* ListNameTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1A0BC731FBA2E590056BFD0 /* ListNameTableViewCell.swift */; };
 		D1C1279C1FB941C6006D0EAF /* Grocery.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D10799341FB8EE3D000E366B /* Grocery.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
@@ -57,6 +58,7 @@
 		D15B15E61FB29563002047EF /* ListItemsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListItemsViewController.swift; sourceTree = "<group>"; };
 		D15B15E81FB29AF6002047EF /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		D15B15EA1FB2B926002047EF /* ListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTableViewCell.swift; sourceTree = "<group>"; };
+		D1A0BC731FBA2E590056BFD0 /* ListNameTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListNameTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,6 +129,7 @@
 				D10799361FB8EE57000E366B /* Model */,
 				D15B15B61FB16855002047EF /* AppDelegate.swift */,
 				D15B15B81FB16855002047EF /* ViewController.swift */,
+				D1A0BC731FBA2E590056BFD0 /* ListNameTableViewCell.swift */,
 				D15B15E81FB29AF6002047EF /* MapViewController.swift */,
 				D15B15BA1FB16855002047EF /* Main.storyboard */,
 				D15B15E61FB29563002047EF /* ListItemsViewController.swift */,
@@ -296,6 +299,7 @@
 				D15B15B71FB16855002047EF /* AppDelegate.swift in Sources */,
 				D15B15E91FB29AF6002047EF /* MapViewController.swift in Sources */,
 				D1C1279C1FB941C6006D0EAF /* Grocery.xcdatamodeld in Sources */,
+				D1A0BC741FBA2E590056BFD0 /* ListNameTableViewCell.swift in Sources */,
 				D15B15EB1FB2B926002047EF /* ListTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
