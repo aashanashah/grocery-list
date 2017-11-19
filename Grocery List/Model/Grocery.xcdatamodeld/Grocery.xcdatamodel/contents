@@ -5,7 +5,6 @@
         <attribute name="item" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="qty" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <relationship name="store" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="List" syncable="YES"/>
     </entity>
     <entity name="List" representedClassName="List" syncable="YES" codeGenerationType="class">
@@ -14,7 +13,7 @@
         <relationship name="fetch" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Items" syncable="YES"/>
     </entity>
     <elements>
+        <element name="Items" positionX="-54" positionY="9" width="128" height="118"/>
         <element name="List" positionX="178" positionY="18" width="128" height="90"/>
-        <element name="Items" positionX="-54" positionY="9" width="128" height="133"/>
     </elements>
 </model>

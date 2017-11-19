@@ -54,6 +54,9 @@
                                                     <state key="normal" title="Button">
                                                         <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
+                                                    <connections>
+                                                        <action selector="onClickItemWithSender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="rnr-Gl-RzE"/>
+                                                    </connections>
                                                 </button>
                                             </subviews>
                                             <constraints>

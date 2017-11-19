@@ -2,7 +2,7 @@
 //  CoreDataManager.swift
 //  MemberChallenge
 //
-//  Created by Utsav Parikh on 3/31/17.
+//  Created by Aashana Shah on 11/6/17.
 //  Copyright © 2017 Veyo LLC. All rights reserved.
 //
 

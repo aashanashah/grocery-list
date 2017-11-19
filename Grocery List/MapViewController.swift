@@ -148,7 +148,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     }
     func checkAddress(address:String)
     {
-        
         let alert = UIAlertController(title: "Verify Address", message: "Is this your chosen location?: "+address , preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: "Yes", style: UIAlertActionStyle.default, handler: {(action: UIAlertAction!) in self.returnData()}))
         
@@ -173,6 +172,4 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         mapView.addAnnotation(currannotation)
         mapView.showsUserLocation = false
     }
-
-
 }
