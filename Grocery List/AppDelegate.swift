@@ -27,6 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         appdelegate.window!.rootViewController = nav // For use in foreground
         coreDataManager = CoreDataManager(modelName: "Grocery")
         managedObjectContext = coreDataManager?.managedObjectContext
+        GSMPlacesClient.provideKey("")
         // Override point for customization after application launch.
         return true
     }

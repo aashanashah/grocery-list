@@ -20,11 +20,13 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     var address : String!
     var coordinate : CLLocationCoordinate2D!
     var name : String!
+    var API_KEY : String!
 
     override func viewDidLoad() {
         self.title = "Choose your location"
         mapView.showsUserLocation = false
         self.locationManager = CLLocationManager()
+        API_KEY = "AIzaSyBSq5tcrkeqBlqIFD6xOjMVNj85VEKv7Ho"
         
         // For use in foreground
        
@@ -60,6 +62,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         let coordinate = mapView.convert(location,toCoordinateFrom: mapView)
         //UserDefaults.setValue(coordinate, forKey: "UserCoordinates")
         self.coordinate = coordinate
+        self.searchLoc = coordinate
         
         // Add annotation:
         let annotation = MKPointAnnotation()
@@ -72,7 +75,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     }
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation])
     {
-        
         currLocation = manager.location!.coordinate
         let span = MKCoordinateSpanMake(0.05, 0.05)
         let region = MKCoordinateRegion(center: currLocation, span: span)
@@ -108,6 +110,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
                 self.setSearch(LocCoordinate:(validPlacemark.location?.coordinate)!)
                 if(self.searchLoc.latitude != 0.0 )
                 {
+                    let allAnnotations = self.mapView.annotations
+                    self.mapView.removeAnnotations(allAnnotations)
                     self.setAnnotation(location: self.searchLoc)
                 }
             }
@@ -122,7 +126,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         let searchPlacemark = MKPlacemark(coordinate: location, addressDictionary: nil)
         let searchAnnotation = MKPointAnnotation()
         searchAnnotation.title = "My Location"
-        let span = MKCoordinateSpanMake(0.05, 0.05)
+        let span = MKCoordinateSpanMake(0.01, 0.01)
         let searchregion = MKCoordinateRegion(center: location, span: span)
         mapView.setRegion(searchregion, animated: true)
         if let Location = searchPlacemark.location
@@ -136,11 +140,28 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         let geocoder = CLGeocoder()
         geocoder.reverseGeocodeLocation(CLLocation(latitude:coordinate.latitude, longitude:coordinate.longitude), completionHandler: {
             placemarks, error in
-            
             if error == nil && placemarks?.count != 0 {
                 let placeMark = placemarks!.last
-                self.address = (placeMark?.name!)! + ", " + (placeMark?.thoroughfare!)! + ", " + (placeMark?.locality!)! + ", " + (placeMark?.administrativeArea!)! + " " + (placeMark?.postalCode)! + ", " + (placeMark?.country!)!
-                self.name = (placeMark?.name!)!
+                if (placeMark?.name) != nil
+                {
+                    self.address.append((placeMark?.name!)! + ",")
+                }
+                if (placeMark?.locality) != nil
+                {
+                    self.address.append((placeMark?.locality!)! + ",")
+                }
+                if (placeMark?.administrativeArea) != nil
+                {
+                    self.address.append((placeMark?.administrativeArea!)! + ",")
+                }
+                if (placeMark?.postalCode) != nil
+                {
+                    self.address.append((placeMark?.postalCode!)! + ",")
+                }
+                if (placeMark?.country) != nil
+                {
+                    self.address.append((placeMark?.country!)! + ",")
+                }
                 self.checkAddress(address: self.address)
                 
             }
@@ -157,6 +178,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     func returnData()
     {
         UserDefaults.standard.set(name, forKey: "Place")
+        UserDefaults.standard.set(searchLoc.latitude, forKey: "Latitude")
+        UserDefaults.standard.set(searchLoc.longitude, forKey: "Longitude")
         self.navigationController?.popViewController(animated: true)
     }
     func resetData()
