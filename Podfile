@@ -7,10 +7,10 @@ target 'Grocery List' do
 
   # Pods for Grocery List
 
-    pod 'Alamofire', '~> 4.5'
-    pod 'SwiftyJSON'
-    pod 'SVProgressHUD'
-    pod ‘IQKeyboardManager’
+    
+    pod 'GooglePlaces'
+    pod 'GooglePlacePicker'
+    pod 'GoogleMaps'
 
   target 'Grocery ListTests' do
     inherit! :search_paths

@@ -9,6 +9,12 @@
 import UIKit
 import CoreData
 import Foundation
+import GooglePlaces
+import GoogleMaps
+import GooglePlacePicker
+import SystemConfiguration
+
+
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -27,8 +33,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         appdelegate.window!.rootViewController = nav // For use in foreground
         coreDataManager = CoreDataManager(modelName: "Grocery")
         managedObjectContext = coreDataManager?.managedObjectContext
-        GSMPlacesClient.provideKey("")
-        // Override point for customization after application launch.
+        GMSPlacesClient.provideAPIKey("AIzaSyBSdPfzt7bGUu2u5JaH3xig-DzhnXSGGWU")
+                // Override point for customization after application launch.
         return true
     }
 

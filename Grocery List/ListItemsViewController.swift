@@ -8,8 +8,9 @@
 
 import UIKit
 import CoreData
+import MapKit
 
-class ListItemsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ListItemsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource  {
     @IBOutlet var locationButton : UIButton!
     @IBOutlet var updateList: UIButton!
     @IBOutlet var listTable : UITableView!
@@ -26,6 +27,8 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
     var id : Int!
     var flag = 0
     var countArr = [""]
+    var coordinate : CLLocationCoordinate2D!
+    var place : String!
     
 
     override func viewDidLoad()
@@ -50,15 +53,14 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     override func viewWillAppear(_ animated: Bool)
     {
-        if (UserDefaults.standard.string(forKey: "Place") != nil)
-        {
-            locationButton.setTitle(UserDefaults.standard.string(forKey: "Place"), for: .normal)
-        }
+        
         listName.text = name
         if listName.text == ""
         {
-            locationButton.setTitle("Locate \u{25b8}", for: .normal)
             UserDefaults.standard.set(nil, forKey: "Place")
+            UserDefaults.standard.set(nil, forKey: "Latitude")
+            UserDefaults.standard.set(nil, forKey: "Longitude")
+            locationButton.setTitle("Locate \u{25b8}", for: .normal)
             addItems.isHidden = false
             addImage.isHidden = false
             listTable.isHidden = true
@@ -81,13 +83,29 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
                 listTable.isHidden = false
                 getList()
             }
+            if (UserDefaults.standard.string(forKey: "Place") != nil)
+            {
+                locationButton.setTitle(UserDefaults.standard.string(forKey: "Place"), for: .normal)
+            }
+            else
+            {
+                getLoc()
+            }
         }
     }
     
     @IBAction func onCLickLocate(sender : UIButton)
     {
         let mapViewController = self.storyboard?.instantiateViewController(withIdentifier: "MapViewController") as! MapViewController
-        
+        if locationButton.currentTitle == "Locate \u{25b8}"
+        {
+            mapViewController.flag = 0
+        }
+        else
+        {
+            mapViewController.flag = 1
+            mapViewController.coordinate = coordinate
+        }
         self.navigationController?.pushViewController(mapViewController, animated: true)
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -174,8 +192,6 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         if flag == 0
         {
-            
-            
             let entityList =  NSEntityDescription.entity(forEntityName: "List", in: appDelegate.managedObjectContext!)
             
             let list = NSManagedObject(entity: entityList!, insertInto: appDelegate.managedObjectContext)
@@ -194,6 +210,18 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
                 list.setValue(count+1, forKey: "id")
                 item.setValue(count+1, forKey: "id")
                 item.setValue(items, forKey: "item")
+                if UserDefaults.standard.string(forKey: "Latitude") == nil || UserDefaults.standard.double(forKey: "Latitude") == 0.0
+                {
+                    item.setValue("", forKey: "place")
+                    item.setValue(0.0, forKey: "latitude")
+                    item.setValue(0.0, forKey: "longitude")
+                }
+                else
+                {
+                    item.setValue(UserDefaults.standard.double(forKey: "Latitude"), forKey: "latitude")
+                    item.setValue(UserDefaults.standard.double(forKey: "Longitude"), forKey: "longitude")
+                    item.setValue(UserDefaults.standard.string(forKey: "Place"), forKey: "place")
+                }
                 do {
                     try appDelegate.managedObjectContext?.save()
                     print("saved!")
@@ -201,7 +229,7 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
                     {
                         print("Could not save \(error), \(error.userInfo)")
                     } catch {}
-                    }
+            }
         }
         else
         {
@@ -217,6 +245,19 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
                         if key == "id" && item.value(forKey: key) as? Int! == id
                         {
                             item.setValue(items, forKey: "item")
+                            print(UserDefaults.standard.string(forKey: "Latitude"))
+                            if UserDefaults.standard.string(forKey: "Latitude") == nil || UserDefaults.standard.double(forKey: "Latitude") == 0.0
+                            {
+                                item.setValue("", forKey: "place")
+                                item.setValue(0.0, forKey: "latitude")
+                                item.setValue(0.0, forKey: "longitude")
+                            }
+                            else
+                            {
+                                item.setValue(UserDefaults.standard.double(forKey: "Latitude"), forKey: "latitude")
+                                item.setValue(UserDefaults.standard.double(forKey: "Longitude"), forKey: "longitude")
+                                item.setValue(UserDefaults.standard.string(forKey: "Place"), forKey: "place")
+                            }
                         }
                     }
                 }
@@ -230,6 +271,10 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
                 print("Unable to retrieve data")
             }
         }
+        UserDefaults.standard.set(nil, forKey: "Place")
+        UserDefaults.standard.set(nil, forKey: "Latitude")
+        UserDefaults.standard.set(nil, forKey: "Longitude")
+        self.navigationController?.popViewController(animated: true)
     }
     func retrievedata()
     {
@@ -354,6 +399,57 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
             
             countArr.remove(at: cellId)
             self.listTable.reloadData()
+        }catch{
+            print("Unable to retrieve data")
+        }
+    }
+    func getLoc()
+    {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let requestList:NSFetchRequest<List>
+        requestList = NSFetchRequest<List>(entityName: "List")
+        let requestItems:NSFetchRequest<Items>
+        requestItems = NSFetchRequest<Items>(entityName: "Items")
+        do
+        {
+            let entities = try appDelegate.managedObjectContext?.fetch(requestList)
+            for item in entities!
+            {
+                for key in item.entity.attributesByName.keys
+                {
+                    if key == "name" && "\(item.value(forKey: key)!)" == listName.text
+                    {
+                        id = item.value(forKey: "id") as? Int!
+                    }
+                }
+            }
+        }catch{
+            print("Unable to retrieve data")
+        }
+        do
+        {
+            let entities = try appDelegate.managedObjectContext?.fetch(requestItems)
+            for item in entities!
+            {
+                for key in item.entity.attributesByName.keys
+                {
+                    if key == "id" && item.value(forKey: key) as? Int! == id
+                    {
+                        place = "\(item.value(forKey: "place")!)"
+                        
+                        if place == ""
+                        {
+                            locationButton.setTitle("Locate \u{25b8}", for: .normal)
+                        }
+                        else
+                        {
+                            locationButton.setTitle(place, for: .normal)
+                            coordinate.latitude = item.value(forKey: "latitude")! as! Double
+                            coordinate.longitude = item.value(forKey: "longitude")! as! Double
+                        }
+                    }
+                }
+            }
         }catch{
             print("Unable to retrieve data")
         }

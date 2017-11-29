@@ -315,24 +315,32 @@
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="yxI-Vt-bvr">
                                 <rect key="frame" x="-0.5" y="10" width="375" height="667"/>
                             </mapView>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Search nearby places" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="hIU-Xw-MJl">
-                                <rect key="frame" x="30" y="50" width="265" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bg3-WQ-2DU">
+                                <rect key="frame" x="30" y="40" width="315" height="30"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="f4d-FI-JMP"/>
+                                    <constraint firstAttribute="height" constant="30" id="pdb-1y-CWw"/>
                                 </constraints>
-                                <nil key="textColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hBg-s9-5b9">
-                                <rect key="frame" x="315" y="50" width="30" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="30" id="L8d-ft-qEi"/>
-                                    <constraint firstAttribute="height" constant="30" id="pwT-Yk-DMG"/>
-                                </constraints>
-                                <state key="normal" image="search"/>
+                                <fontDescription key="fontDescription" name="AmericanTypewriter" family="American Typewriter" pointSize="20"/>
+                                <state key="normal" title="Search Places">
+                                    <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
                                 <connections>
-                                    <action selector="goClickWithSender:" destination="y2R-Aw-ulh" eventType="touchUpInside" id="brc-ep-q5j"/>
+                                    <action selector="autocompleteClicked:" destination="y2R-Aw-ulh" eventType="touchUpInside" id="V4O-qK-j9H"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZMM-Qt-l4n">
+                                <rect key="frame" x="30" y="617" width="315" height="30"/>
+                                <color key="backgroundColor" red="1" green="0.81764149350000004" blue="0.36884548610000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="qaD-7W-prg"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="AmericanTypewriter" family="American Typewriter" pointSize="20"/>
+                                <state key="normal" title="Save Location">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="saveAddressWithSender:" destination="y2R-Aw-ulh" eventType="touchUpInside" id="dcl-QY-ZlS"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -340,19 +348,20 @@
                         <constraints>
                             <constraint firstItem="yxI-Vt-bvr" firstAttribute="width" secondItem="jJW-tM-2ZC" secondAttribute="width" id="6gk-pl-Vik"/>
                             <constraint firstItem="yxI-Vt-bvr" firstAttribute="centerY" secondItem="V6l-Ri-rJz" secondAttribute="centerY" id="Hob-wN-bMp"/>
+                            <constraint firstItem="V6l-Ri-rJz" firstAttribute="bottom" secondItem="ZMM-Qt-l4n" secondAttribute="bottom" constant="20" id="Nvt-gQ-cUp"/>
+                            <constraint firstItem="V6l-Ri-rJz" firstAttribute="trailing" secondItem="Bg3-WQ-2DU" secondAttribute="trailing" constant="30" id="Qr5-6C-SlZ"/>
                             <constraint firstItem="yxI-Vt-bvr" firstAttribute="centerX" secondItem="V6l-Ri-rJz" secondAttribute="centerX" id="Sf4-oS-Teq"/>
+                            <constraint firstItem="Bg3-WQ-2DU" firstAttribute="leading" secondItem="V6l-Ri-rJz" secondAttribute="leading" constant="30" id="Ws7-uf-IDa"/>
+                            <constraint firstItem="ZMM-Qt-l4n" firstAttribute="leading" secondItem="V6l-Ri-rJz" secondAttribute="leading" constant="30" id="Ybe-SV-E5N"/>
                             <constraint firstItem="yxI-Vt-bvr" firstAttribute="height" secondItem="jJW-tM-2ZC" secondAttribute="height" id="Z9G-xz-IjX"/>
-                            <constraint firstItem="hBg-s9-5b9" firstAttribute="centerY" secondItem="hIU-Xw-MJl" secondAttribute="centerY" id="aiR-0C-JEf"/>
-                            <constraint firstItem="hIU-Xw-MJl" firstAttribute="leading" secondItem="V6l-Ri-rJz" secondAttribute="leading" constant="30" id="dSK-JA-WtH"/>
-                            <constraint firstItem="hBg-s9-5b9" firstAttribute="leading" secondItem="hIU-Xw-MJl" secondAttribute="trailing" constant="20" id="eGK-Zv-cZG"/>
-                            <constraint firstItem="hIU-Xw-MJl" firstAttribute="top" secondItem="V6l-Ri-rJz" secondAttribute="top" constant="30" id="udf-Wr-KKH"/>
-                            <constraint firstItem="V6l-Ri-rJz" firstAttribute="trailing" secondItem="hBg-s9-5b9" secondAttribute="trailing" constant="30" id="vdQ-RK-fZn"/>
+                            <constraint firstItem="Bg3-WQ-2DU" firstAttribute="top" secondItem="V6l-Ri-rJz" secondAttribute="top" constant="20" id="lE9-Sq-QCA"/>
+                            <constraint firstItem="V6l-Ri-rJz" firstAttribute="trailing" secondItem="ZMM-Qt-l4n" secondAttribute="trailing" constant="30" id="pvg-jP-opo"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="V6l-Ri-rJz"/>
                     </view>
                     <connections>
                         <outlet property="mapView" destination="yxI-Vt-bvr" id="MJI-ri-r73"/>
-                        <outlet property="search" destination="hIU-Xw-MJl" id="Xbe-hZ-6sd"/>
+                        <outlet property="saveAdd" destination="Bg3-WQ-2DU" id="gqK-45-hMJ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1Bh-Hm-p5k" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -362,6 +371,5 @@
     </scenes>
     <resources>
         <image name="add" width="30" height="30"/>
-        <image name="search" width="30" height="30"/>
     </resources>
 </document>

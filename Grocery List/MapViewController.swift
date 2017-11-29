@@ -9,10 +9,15 @@
 import UIKit
 import MapKit
 import CoreLocation
+import GooglePlaces
+import GoogleMaps
 
-class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate, CLLocationManagerDelegate  {
+
+class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate, CLLocationManagerDelegate, GMSAutocompleteViewControllerDelegate {
+    
+    
     @IBOutlet var mapView : MKMapView!
-    @IBOutlet var search : UITextField!
+    @IBOutlet var saveAdd : UIButton!
     var currLocation:CLLocationCoordinate2D!
     let currannotation = MKPointAnnotation()
     var locationManager: CLLocationManager!
@@ -20,32 +25,41 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     var address : String!
     var coordinate : CLLocationCoordinate2D!
     var name : String!
-    var API_KEY : String!
+    var flag = 0
 
     override func viewDidLoad() {
-        self.title = "Choose your location"
-        mapView.showsUserLocation = false
-        self.locationManager = CLLocationManager()
-        API_KEY = "AIzaSyBSq5tcrkeqBlqIFD6xOjMVNj85VEKv7Ho"
         
-        // For use in foreground
-       
-        self.locationManager.requestWhenInUseAuthorization()
-            
-        if CLLocationManager.locationServicesEnabled()
-        {
-            locationManager.delegate = self as CLLocationManagerDelegate
-            locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-            locationManager.startUpdatingLocation()
-        }
-        mapView.delegate = self
-        mapView.mapType = MKMapType.standard
-        
-        let gestureRecognizer = UITapGestureRecognizer(target: self, action:#selector(handleTap(gestureReconizer:)))
-        mapView.addGestureRecognizer(gestureRecognizer)
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        self.title = "Choose your location"
+        if flag == 1
+        {
+              getAddress(coordinate: coordinate)
+        }
+        else
+        {
+            mapView.showsUserLocation = false
+            self.locationManager = CLLocationManager()
+            address = ""
+            // For use in foreground
+            
+            self.locationManager.requestWhenInUseAuthorization()
+            
+            if CLLocationManager.locationServicesEnabled()
+            {
+                locationManager.delegate = self as CLLocationManagerDelegate
+                locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+                locationManager.startUpdatingLocation()
+            }
+            mapView.delegate = self
+            mapView.mapType = MKMapType.standard
+            
+            let gestureRecognizer = UITapGestureRecognizer(target: self, action:#selector(handleTap(gestureReconizer:)))
+            mapView.addGestureRecognizer(gestureRecognizer)
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -83,30 +97,51 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         currannotation.title = "Current location"
         mapView.addAnnotation(currannotation)
     }
+    @IBAction func autocompleteClicked(_ sender: UIButton) {
+        
+        let placePickerController = GMSAutocompleteViewController()
+        placePickerController.delegate = self
+        present(placePickerController, animated: true, completion: nil)
+    }
+    func viewController(_ viewController: GMSAutocompleteViewController, didAutocompleteWith place: GMSPlace) {
+        name = place.name
+        address = place.formattedAddress
+        saveAdd.setTitle(name, for: .normal)
+        let allAnnotations = self.mapView.annotations
+        self.mapView.removeAnnotations(allAnnotations)
+        getAddress()
+        dismiss(animated: true, completion: nil)
+    }
     
-    @IBAction func goClick(sender: UIButton)
+    func viewController(_ viewController: GMSAutocompleteViewController, didFailAutocompleteWithError error: Error) {
+        print("Error: ", error.localizedDescription)
+    }
+    
+    func wasCancelled(_ viewController: GMSAutocompleteViewController) {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    // Turn the network activity indicator on and off again.
+    func didRequestAutocompletePredictions(_ viewController: GMSAutocompleteViewController) {
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
+    }
+    
+    func didUpdateAutocompletePredictions(_ viewController: GMSAutocompleteViewController) {
+        UIApplication.shared.isNetworkActivityIndicatorVisible = false
+    }
+    func getAddress()
     {
         self.view.endEditing(true)
         mapView.showsUserLocation = true
         mapView.removeAnnotation(currannotation)
-        if(search.text == "")
-        {
-            let alert = UIAlertController(title: "Alert", message: "Please enter valid name", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        }
-        else
-        {
-            mapView.delegate = self
-            getMapBySource(mapView, address:search.text!, title: "Your location", subtitle: "Your location")
-        }
+        mapView.delegate = self
+        getMapBySource(mapView, address:address, title: "Chosen location", subtitle: "Chosen location")
     }
     func getMapBySource(_ locationMap:MKMapView?, address:String?, title: String?, subtitle: String?)
     {
         let geocoder = CLGeocoder()
         geocoder.geocodeAddressString(address!, completionHandler: {(placemarks, error) -> Void in
             if let validPlacemark = placemarks?[0]{
-                
                 self.setSearch(LocCoordinate:(validPlacemark.location?.coordinate)!)
                 if(self.searchLoc.latitude != 0.0 )
                 {
@@ -123,9 +158,11 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     }
     func setAnnotation(location:CLLocationCoordinate2D)
     {
+        let allAnnotations = self.mapView.annotations
+        self.mapView.removeAnnotations(allAnnotations)
         let searchPlacemark = MKPlacemark(coordinate: location, addressDictionary: nil)
         let searchAnnotation = MKPointAnnotation()
-        searchAnnotation.title = "My Location"
+        searchAnnotation.title = "Chosen Location"
         let span = MKCoordinateSpanMake(0.01, 0.01)
         let searchregion = MKCoordinateRegion(center: location, span: span)
         mapView.setRegion(searchregion, animated: true)
@@ -162,7 +199,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
                 {
                     self.address.append((placeMark?.country!)! + ",")
                 }
-                self.checkAddress(address: self.address)
+                if self.flag == 0
+                {
+                    self.checkAddress(address: self.address)
+                }
                 
             }
         })
@@ -180,11 +220,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         UserDefaults.standard.set(name, forKey: "Place")
         UserDefaults.standard.set(searchLoc.latitude, forKey: "Latitude")
         UserDefaults.standard.set(searchLoc.longitude, forKey: "Longitude")
-        self.navigationController?.popViewController(animated: true)
     }
     func resetData()
     {
-        search.text = ""
         let allAnnotations = self.mapView.annotations
         self.mapView.removeAnnotations(allAnnotations)
         let span = MKCoordinateSpanMake(0.05, 0.05)
@@ -195,4 +233,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         mapView.addAnnotation(currannotation)
         mapView.showsUserLocation = false
     }
+    @IBAction func saveAddress(sender : UIButton)
+    {
+        returnData()
+        self.navigationController?.popViewController(animated: true)
+    }
 }
+    

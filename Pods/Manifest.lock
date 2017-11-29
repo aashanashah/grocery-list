@@ -1,21 +1,25 @@
 PODS:
-  - Alamofire (4.5.1)
-  - IQKeyboardManager (5.0.3)
-  - SVProgressHUD (2.2.1)
-  - SwiftyJSON (3.1.4)
+  - GoogleMaps (2.4.0):
+    - GoogleMaps/Maps (= 2.4.0)
+  - GoogleMaps/Base (2.4.0)
+  - GoogleMaps/Maps (2.4.0):
+    - GoogleMaps/Base
+  - GooglePlacePicker (2.4.0):
+    - GoogleMaps (= 2.4.0)
+    - GooglePlaces (= 2.4.0)
+  - GooglePlaces (2.4.0):
+    - GoogleMaps/Base (= 2.4.0)
 
 DEPENDENCIES:
-  - Alamofire (~> 4.5)
-  - IQKeyboardManager
-  - SVProgressHUD
-  - SwiftyJSON
+  - GoogleMaps
+  - GooglePlacePicker
+  - GooglePlaces
 
 SPEC CHECKSUMS:
-  Alamofire: 2d95912bf4c34f164fdfc335872e8c312acaea4a
-  IQKeyboardManager: dc5b18b47e5170e4d150bb86dbee8c8a2fc48997
-  SVProgressHUD: db27c54e6e18bc903341661fc9feb55e04905cc4
-  SwiftyJSON: c2842d878f95482ffceec5709abc3d05680c0220
+  GoogleMaps: 8436ab5d1c25e36915b2f7416d0c8e3fa2e76c61
+  GooglePlacePicker: 755f10343d71280c7b016823e73fbae9625dfa8a
+  GooglePlaces: aafe5990fa7951e98e078761bbdaaf236d7e0c65
 
-PODFILE CHECKSUM: 0e981b03c512d5083065099989d3a5e884e6f374
+PODFILE CHECKSUM: 4a15265051b6911c210e8acd76e4ff87e881b8b2
 
 COCOAPODS: 1.2.0
