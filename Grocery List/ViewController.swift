@@ -38,6 +38,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBAction func addList(sender : UIButton!)
     {
         let listItemsViewController = self.storyboard?.instantiateViewController(withIdentifier: "ListItemsViewController") as! ListItemsViewController
+        listItemsViewController.flag = 0
+        UserDefaults.standard.set(nil, forKey: "Place")
+        UserDefaults.standard.set(nil, forKey: "Latitude")
+        UserDefaults.standard.set(nil, forKey: "Longitude")
         self.navigationController?.pushViewController(listItemsViewController, animated: true)
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -79,7 +83,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     if key == "name"
                     {
                         var value: Any? = item.value(forKey: key)
+                        if value == nil
+                        {
+                            listNames.append("a")
+                        }
+                        else
+                        {
                         listNames.append("\(value!)")
+                        }
                         print(item.value(forKey: "id"))
                     }
                 }
@@ -93,6 +104,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     {
         let listItemsViewController = self.storyboard?.instantiateViewController(withIdentifier: "ListItemsViewController") as! ListItemsViewController
         listItemsViewController.name = sender.currentTitle!
+        listItemsViewController.flag = 1
         self.navigationController?.pushViewController(listItemsViewController, animated: true)
     }
     func deleteData(id : Int)

@@ -11,6 +11,7 @@ target 'Grocery List' do
     pod 'GooglePlaces'
     pod 'GooglePlacePicker'
     pod 'GoogleMaps'
+    pod 'SVProgressHUD'
 
   target 'Grocery ListTests' do
     inherit! :search_paths

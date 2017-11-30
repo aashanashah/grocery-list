@@ -11,6 +11,7 @@ import MapKit
 import CoreLocation
 import GooglePlaces
 import GoogleMaps
+import SVProgressHUD
 
 
 class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate, CLLocationManagerDelegate, GMSAutocompleteViewControllerDelegate {
@@ -37,7 +38,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         self.title = "Choose your location"
         if flag == 1
         {
-              getAddress(coordinate: coordinate)
+            saveAdd.setTitle(name, for: .normal)
+            setAnnotation(location: coordinate)
         }
         else
         {
@@ -90,7 +92,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation])
     {
         currLocation = manager.location!.coordinate
-        let span = MKCoordinateSpanMake(0.05, 0.05)
+        let span = MKCoordinateSpanMake(0.01, 0.01)
         let region = MKCoordinateRegion(center: currLocation, span: span)
         mapView.setRegion(region, animated: true)
         currannotation.coordinate = currLocation
@@ -103,7 +105,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         placePickerController.delegate = self
         present(placePickerController, animated: true, completion: nil)
     }
-    func viewController(_ viewController: GMSAutocompleteViewController, didAutocompleteWith place: GMSPlace) {
+    func viewController(_ viewController: GMSAutocompleteViewController, didAutocompleteWith place: GMSPlace)
+    {
         name = place.name
         address = place.formattedAddress
         saveAdd.setTitle(name, for: .normal)
@@ -139,6 +142,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     }
     func getMapBySource(_ locationMap:MKMapView?, address:String?, title: String?, subtitle: String?)
     {
+        DispatchQueue.global(qos: .userInitiated).async
+        {
+                SVProgressHUD.show()
+        }
         let geocoder = CLGeocoder()
         geocoder.geocodeAddressString(address!, completionHandler: {(placemarks, error) -> Void in
             if let validPlacemark = placemarks?[0]{
@@ -158,17 +165,22 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     }
     func setAnnotation(location:CLLocationCoordinate2D)
     {
+        Thread.sleep(forTimeInterval: 1.0)
         let allAnnotations = self.mapView.annotations
         self.mapView.removeAnnotations(allAnnotations)
         let searchPlacemark = MKPlacemark(coordinate: location, addressDictionary: nil)
         let searchAnnotation = MKPointAnnotation()
-        searchAnnotation.title = "Chosen Location"
+        searchAnnotation.title = name
         let span = MKCoordinateSpanMake(0.01, 0.01)
         let searchregion = MKCoordinateRegion(center: location, span: span)
         mapView.setRegion(searchregion, animated: true)
         if let Location = searchPlacemark.location
         {
             searchAnnotation.coordinate = Location.coordinate
+        }
+        DispatchQueue.global(qos: .userInitiated).async
+        {
+                SVProgressHUD.dismiss()
         }
         self.mapView.addAnnotation(searchAnnotation)
     }
@@ -225,7 +237,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     {
         let allAnnotations = self.mapView.annotations
         self.mapView.removeAnnotations(allAnnotations)
-        let span = MKCoordinateSpanMake(0.05, 0.05)
+        let span = MKCoordinateSpanMake(0.01, 0.01)
         let region = MKCoordinateRegion(center: currLocation, span: span)
         mapView.setRegion(region, animated: true)
         currannotation.coordinate = currLocation

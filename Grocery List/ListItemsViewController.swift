@@ -29,6 +29,7 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
     var countArr = [""]
     var coordinate : CLLocationCoordinate2D!
     var place : String!
+    var del = 0
     
 
     override func viewDidLoad()
@@ -53,9 +54,12 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     override func viewWillAppear(_ animated: Bool)
     {
-        
-        listName.text = name
-        if listName.text == ""
+        del = 0
+        if (UserDefaults.standard.string(forKey: "Place") != nil)
+        {
+            locationButton.setTitle(UserDefaults.standard.string(forKey: "Place"), for: .normal)
+        }
+        else if flag == 0
         {
             UserDefaults.standard.set(nil, forKey: "Place")
             UserDefaults.standard.set(nil, forKey: "Latitude")
@@ -68,29 +72,26 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
         }
         else
         {
+            listName.text = name
             retrievedata()
+            getList()
+            getLoc()
             flag = 1
-            if count == 0
+            if listArray.count == 0
             {
                 addItems.isHidden = false
                 addImage.isHidden = false
                 listTable.isHidden = true
+                listArray = [""]
+                listTable.reloadData()
             }
             else
             {
                 addItems.isHidden = true
                 addImage.isHidden = true
                 listTable.isHidden = false
-                getList()
             }
-            if (UserDefaults.standard.string(forKey: "Place") != nil)
-            {
-                locationButton.setTitle(UserDefaults.standard.string(forKey: "Place"), for: .normal)
-            }
-            else
-            {
-                getLoc()
-            }
+            
         }
     }
     
@@ -104,7 +105,19 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
         else
         {
             mapViewController.flag = 1
-            mapViewController.coordinate = coordinate
+            mapViewController.name = locationButton.currentTitle
+            if coordinate != nil
+            {
+                mapViewController.coordinate = coordinate
+                coordinate = nil
+            }
+            else
+            {
+                let lat =  UserDefaults.standard.double(forKey: "Latitude")
+                let long = UserDefaults.standard.double(forKey: "Longitude")
+                coordinate = CLLocationCoordinate2DMake(lat, long)
+                mapViewController.coordinate = coordinate
+            }
         }
         self.navigationController?.pushViewController(mapViewController, animated: true)
     }
@@ -114,7 +127,7 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
         let cell:ListTableViewCell = self.listTable.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! ListTableViewCell
-        if flag == 0
+        if flag == 0 || listArray[0] == ""
         {
             cell.addButton.tag = indexPath.row;
             cell.addButton.addTarget(self, action:#selector(onaddRow(sender:)), for: .touchUpInside)
@@ -130,6 +143,7 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     @objc func onaddRow(sender:UIButton)
     {
+        del = 1
         listArray.append("")
         countArr.append("0")
         listTable.beginUpdates()
@@ -153,7 +167,10 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
                 addImage.isHidden = false
                 listTable.isHidden = true
             }
-            deleteData(cellId : indexPath.row)
+            if del == 0
+            {
+                deleteData(cellId : indexPath.row)
+            }
         }
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
@@ -171,6 +188,7 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
         var i=0
         while i<listArray.count
         {
+            
             let ndx = IndexPath(row:i, section: 0)
             let cell = listTable.cellForRow(at:ndx) as! ListTableViewCell
             let txt = cell.listText.text
@@ -178,6 +196,12 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
             data.append(["name":txt!,"qty":qty!])
             i+=1
         }
+        if data.count == 1 && data[0] == ["name": "", "qty": "0"]
+        {
+            items = "[\n\n]"
+        }
+        else
+        {
         do {
             let data1 =  try JSONSerialization.data(withJSONObject: data, options: JSONSerialization.WritingOptions.prettyPrinted) // first of all convert json to the data
             let convertedString = String(data: data1, encoding: String.Encoding.utf8) // the data will be converted to the string
@@ -186,26 +210,25 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
         } catch let myJSONError {
             print(myJSONError)
         }
-
-  
+        }
         retrievedata()
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         if flag == 0
         {
-            let entityList =  NSEntityDescription.entity(forEntityName: "List", in: appDelegate.managedObjectContext!)
-            
-            let list = NSManagedObject(entity: entityList!, insertInto: appDelegate.managedObjectContext)
-            let entityItem =  NSEntityDescription.entity(forEntityName: "Items", in: appDelegate.managedObjectContext!)
-            
-            let item = NSManagedObject(entity: entityItem!, insertInto: appDelegate.managedObjectContext)
             if listName.text == nil || listName.text == ""
             {
-                let alert = UIAlertController(title: "Grocery List", message: "Enter Valid ListName", preferredStyle: UIAlertControllerStyle.alert)
+                let alert = UIAlertController(title: "Grocery List", message: "Enter Valid List Name", preferredStyle: UIAlertControllerStyle.alert)
                 alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
             }
             else
             {
+                let entityList =  NSEntityDescription.entity(forEntityName: "List", in: appDelegate.managedObjectContext!)
+                
+                let list = NSManagedObject(entity: entityList!, insertInto: appDelegate.managedObjectContext)
+                let entityItem =  NSEntityDescription.entity(forEntityName: "Items", in: appDelegate.managedObjectContext!)
+                
+                let item = NSManagedObject(entity: entityItem!, insertInto: appDelegate.managedObjectContext)
                 list.setValue(listName.text, forKey: "name")
                 list.setValue(count+1, forKey: "id")
                 item.setValue(count+1, forKey: "id")
@@ -245,7 +268,6 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
                         if key == "id" && item.value(forKey: key) as? Int! == id
                         {
                             item.setValue(items, forKey: "item")
-                            print(UserDefaults.standard.string(forKey: "Latitude"))
                             if UserDefaults.standard.string(forKey: "Latitude") == nil || UserDefaults.standard.double(forKey: "Latitude") == 0.0
                             {
                                 item.setValue("", forKey: "place")
@@ -367,14 +389,12 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
                 {
                     if key == "id" && item.value(forKey: key) as? Int! == id
                     {
-                        print(id)
                         let fetchedItems = item.value(forKey: "item") as! String
                         if let data = fetchedItems.data(using: .utf8)
                         {
                             var json = try! JSONSerialization.jsonObject(with: data, options: []) as! [Dictionary<String,Any>]
-                            print(json)
+                           
                             json.remove(at: cellId)
-                            print(json)
                             do {
                                 let data1 =  try JSONSerialization.data(withJSONObject: json, options: JSONSerialization.WritingOptions.prettyPrinted) // first of all convert json to the data
                                 let convertedString = String(data: data1, encoding: String.Encoding.utf8) // the data will be converted to the string
@@ -385,6 +405,7 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
                             }
                         }
                         item.setValue(items, forKey: "item")
+                        
                     }
                 }
                 
@@ -444,8 +465,9 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
                         else
                         {
                             locationButton.setTitle(place, for: .normal)
-                            coordinate.latitude = item.value(forKey: "latitude")! as! Double
-                            coordinate.longitude = item.value(forKey: "longitude")! as! Double
+                            let lat = item.value(forKey: "latitude")! as! CLLocationDegrees
+                            let long = item.value(forKey: "longitude")! as! CLLocationDegrees
+                            coordinate = CLLocationCoordinate2DMake(lat, long)
                         }
                     }
                 }
