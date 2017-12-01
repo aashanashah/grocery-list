@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 import MapKit
 
-class ListItemsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource  {
+class ListItemsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate  {
     @IBOutlet var locationButton : UIButton!
     @IBOutlet var updateList: UIButton!
     @IBOutlet var listTable : UITableView!
@@ -54,6 +54,7 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     override func viewWillAppear(_ animated: Bool)
     {
+        listName.delegate = self
         del = 0
         if (UserDefaults.standard.string(forKey: "Place") != nil)
         {
@@ -94,7 +95,11 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
             
         }
     }
-    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool
+    {
+        self.view.endEditing(true)
+        return false
+    }
     @IBAction func onCLickLocate(sender : UIButton)
     {
         let mapViewController = self.storyboard?.instantiateViewController(withIdentifier: "MapViewController") as! MapViewController
@@ -270,9 +275,12 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
                             item.setValue(items, forKey: "item")
                             if UserDefaults.standard.string(forKey: "Latitude") == nil || UserDefaults.standard.double(forKey: "Latitude") == 0.0
                             {
-                                item.setValue("", forKey: "place")
-                                item.setValue(0.0, forKey: "latitude")
-                                item.setValue(0.0, forKey: "longitude")
+                                if locationButton.currentTitle == "Locate \u{25b8}"
+                                {
+                                    item.setValue("", forKey: "place")
+                                    item.setValue(0.0, forKey: "latitude")
+                                    item.setValue(0.0, forKey: "longitude")
+                                }
                             }
                             else
                             {

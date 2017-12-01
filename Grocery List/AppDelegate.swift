@@ -13,6 +13,8 @@ import GooglePlaces
 import GoogleMaps
 import GooglePlacePicker
 import SystemConfiguration
+import UserNotifications
+
 
 
 
@@ -22,7 +24,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     var coreDataManager: CoreDataManager?
     var managedObjectContext: NSManagedObjectContext?
-   
+  
+    let options: UNAuthorizationOptions = [.alert, .sound];
+    let notificationDelegate = Notification()
+    let requestIdentifier = "SampleRequest"
+    let center = UNUserNotificationCenter.current()
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
@@ -46,6 +52,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidEnterBackground(_ application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+        let center = UNUserNotificationCenter.current()
+        center.delegate = notificationDelegate
+        let content = UNMutableNotificationContent()
+        content.title = "Don't forget"
+        content.body = "Buy some milk"
+        content.sound = UNNotificationSound.default()
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1.0,
+                                                        repeats: false)
+        
+        
+        let request = UNNotificationRequest(identifier: requestIdentifier,
+                                            content: content, trigger: trigger)
+        center.add(request, withCompletionHandler: { (error) in
+            if let error = error {
+                print(error)
+            }
+        })
+        let snoozeAction = UNNotificationAction(identifier: "Snooze",
+                                                title: "Snooze", options: [])
+        let deleteAction = UNNotificationAction(identifier: "Delete",
+                                                title: "Delete", options: [.destructive])
+        let category = UNNotificationCategory(identifier: "Category",
+                                              actions: [snoozeAction,deleteAction],
+                                              intentIdentifiers: [], options: [])
+        center.setNotificationCategories([category])
+        content.categoryIdentifier = "Category"
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
