@@ -48,7 +48,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
             address = ""
             // For use in foreground
             
-            self.locationManager.requestWhenInUseAuthorization()
+            self.locationManager.requestAlwaysAuthorization()
             
             if CLLocationManager.locationServicesEnabled()
             {

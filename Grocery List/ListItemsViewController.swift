@@ -9,8 +9,13 @@
 import UIKit
 import CoreData
 import MapKit
+import CoreLocation
+import UserNotifications
 
-class ListItemsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate  {
+struct PreferencesKeys {
+    static let savedItems = "savedItems"
+}
+class ListItemsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, CLLocationManagerDelegate  {
     @IBOutlet var locationButton : UIButton!
     @IBOutlet var updateList: UIButton!
     @IBOutlet var listTable : UITableView!
@@ -30,8 +35,10 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
     var coordinate : CLLocationCoordinate2D!
     var place : String!
     var del = 0
+    var locationManager : CLLocationManager = CLLocationManager()
+    var setLocation = false
+ 
     
-
     override func viewDidLoad()
     {
         super.viewDidLoad()
@@ -45,9 +52,11 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
         addItems.layer.cornerRadius = 10
         addItems.layer.borderWidth = 1
         addItems.layer.borderColor = UIColor.black.cgColor
+        self.locationManager.requestAlwaysAuthorization()
+        self.locationManager.delegate = self
         // Do any additional setup after loading the view.
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -207,14 +216,14 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
         }
         else
         {
-        do {
-            let data1 =  try JSONSerialization.data(withJSONObject: data, options: JSONSerialization.WritingOptions.prettyPrinted) // first of all convert json to the data
-            let convertedString = String(data: data1, encoding: String.Encoding.utf8) // the data will be converted to the string
-            items = convertedString!
-            
-        } catch let myJSONError {
-            print(myJSONError)
-        }
+            do {
+                let data1 =  try JSONSerialization.data(withJSONObject: data, options: JSONSerialization.WritingOptions.prettyPrinted) // first of all convert json to the data
+                let convertedString = String(data: data1, encoding: String.Encoding.utf8) // the data will be converted to the string
+                items = convertedString!
+                
+            } catch let myJSONError {
+                print(myJSONError)
+            }
         }
         retrievedata()
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -249,14 +258,23 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
                     item.setValue(UserDefaults.standard.double(forKey: "Latitude"), forKey: "latitude")
                     item.setValue(UserDefaults.standard.double(forKey: "Longitude"), forKey: "longitude")
                     item.setValue(UserDefaults.standard.string(forKey: "Place"), forKey: "place")
+                    if setLocation == true
+                    {
+                        let lat = UserDefaults.standard.double(forKey: "Latitude")
+                        let long = UserDefaults.standard.double(forKey: "Longitude")
+                        let geo = CLLocationCoordinate2DMake(lat, long);
+                        let region = CLCircularRegion(center:geo , radius: 200, identifier: locationButton.currentTitle!)
+                        locationManager.startMonitoring(for: region)
+                        item.setValue("\(lat)+\(long)+\(locationButton.currentTitle!)",forKey: "geotification")
+                    }
                 }
                 do {
                     try appDelegate.managedObjectContext?.save()
                     print("saved!")
-                    } catch let error as NSError
-                    {
-                        print("Could not save \(error), \(error.userInfo)")
-                    } catch {}
+                } catch let error as NSError
+                {
+                    print("Could not save \(error), \(error.userInfo)")
+                } catch {}
             }
         }
         else
@@ -287,6 +305,15 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
                                 item.setValue(UserDefaults.standard.double(forKey: "Latitude"), forKey: "latitude")
                                 item.setValue(UserDefaults.standard.double(forKey: "Longitude"), forKey: "longitude")
                                 item.setValue(UserDefaults.standard.string(forKey: "Place"), forKey: "place")
+                                if setLocation == true
+                                {
+                                    let lat = UserDefaults.standard.double(forKey: "Latitude")
+                                    let long = UserDefaults.standard.double(forKey: "Longitude")
+                                    let geo = CLLocationCoordinate2DMake(lat, long);
+                                    let region = CLCircularRegion(center:geo , radius: 200, identifier: locationButton.currentTitle!)
+                                    locationManager.startMonitoring(for: region)
+                                    item.setValue("\(lat)+\(long)+\(locationButton.currentTitle!)",forKey: "geotification")
+                                }
                             }
                         }
                     }
@@ -313,22 +340,22 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let request:NSFetchRequest<List>
         request = NSFetchRequest<List>(entityName: "List")
-            do
+        do
+        {
+            let entities = try appDelegate.managedObjectContext?.fetch(request)
+            for item in entities!
             {
-                let entities = try appDelegate.managedObjectContext?.fetch(request)
-                for item in entities!
+                for key in item.entity.attributesByName.keys
                 {
-                    for key in item.entity.attributesByName.keys
+                    if key == "id" && item.value(forKey: key) != nil
                     {
-                        if key == "id" && item.value(forKey: key) != nil
-                        {
-                            count += 1
-                        }
+                        count += 1
                     }
                 }
-            }catch{
-                print("Unable to retrieve data")
             }
+        }catch{
+            print("Unable to retrieve data")
+        }
     }
     func getList()
     {
@@ -401,7 +428,7 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
                         if let data = fetchedItems.data(using: .utf8)
                         {
                             var json = try! JSONSerialization.jsonObject(with: data, options: []) as! [Dictionary<String,Any>]
-                           
+                            
                             json.remove(at: cellId)
                             do {
                                 let data1 =  try JSONSerialization.data(withJSONObject: json, options: JSONSerialization.WritingOptions.prettyPrinted) // first of all convert json to the data
@@ -484,4 +511,20 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
             print("Unable to retrieve data")
         }
     }
+  
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        if (status == CLAuthorizationStatus.authorizedAlways) {
+            self.setLocation = true
+        }
+    }
+    
+    
+    func showAlert(withTitle title: String?, message: String?) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let action = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+        alert.addAction(action)
+        present(alert, animated: true, completion: nil)
+    }
+    
 }
+

@@ -14,21 +14,20 @@ import GoogleMaps
 import GooglePlacePicker
 import SystemConfiguration
 import UserNotifications
-
-
-
+import CoreLocation
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate {
 
     var window: UIWindow?
     var coreDataManager: CoreDataManager?
     var managedObjectContext: NSManagedObjectContext?
-  
+    let locationManager = CLLocationManager()
     let options: UNAuthorizationOptions = [.alert, .sound];
     let notificationDelegate = Notification()
     let requestIdentifier = "SampleRequest"
     let center = UNUserNotificationCenter.current()
+   
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
@@ -40,7 +39,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         coreDataManager = CoreDataManager(modelName: "Grocery")
         managedObjectContext = coreDataManager?.managedObjectContext
         GMSPlacesClient.provideAPIKey("AIzaSyBSdPfzt7bGUu2u5JaH3xig-DzhnXSGGWU")
-                // Override point for customization after application launch.
+        locationManager.delegate = self
+        locationManager.requestAlwaysAuthorization()
+        
+        // Override point for customization after application launch.
         return true
     }
 
@@ -52,32 +54,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidEnterBackground(_ application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-        let center = UNUserNotificationCenter.current()
-        center.delegate = notificationDelegate
-        let content = UNMutableNotificationContent()
-        content.title = "Don't forget"
-        content.body = "Buy some milk"
-        content.sound = UNNotificationSound.default()
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1.0,
-                                                        repeats: false)
-        
-        
-        let request = UNNotificationRequest(identifier: requestIdentifier,
-                                            content: content, trigger: trigger)
-        center.add(request, withCompletionHandler: { (error) in
-            if let error = error {
-                print(error)
-            }
-        })
-        let snoozeAction = UNNotificationAction(identifier: "Snooze",
-                                                title: "Snooze", options: [])
-        let deleteAction = UNNotificationAction(identifier: "Delete",
-                                                title: "Delete", options: [.destructive])
-        let category = UNNotificationCategory(identifier: "Category",
-                                              actions: [snoozeAction,deleteAction],
-                                              intentIdentifiers: [], options: [])
-        center.setNotificationCategories([category])
-        content.categoryIdentifier = "Category"
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
@@ -91,7 +67,70 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
+    func handleEvent(forRegion region: CLRegion!) {
+        // Show an alert if application is active
+        
+            // Otherwise present a local notification
+                let center = UNUserNotificationCenter.current()
+                center.delegate = notificationDelegate
+                let content = UNMutableNotificationContent()
+                content.title = "Don't forget"
+                content.body = "Buy some milk"
+                content.sound = UNNotificationSound.default()
+                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1.0,
+                                                                repeats: false)
+                
+                
+                let request = UNNotificationRequest(identifier: requestIdentifier,
+                                                    content: content, trigger: trigger)
+                center.add(request, withCompletionHandler: { (error) in
+                    if let error = error {
+                        print(error)
+                    }
+                })
+                let repeatAction = UNNotificationAction(identifier:"repeat",
+                                                        title:"Repeat",options:[])
+                let changeAction = UNTextInputNotificationAction(identifier:
+                    "change", title: "Change Message", options: [])
+                
+                let category = UNNotificationCategory(identifier: "actionCategory",
+                                                      actions: [repeatAction, changeAction],
+                                                      intentIdentifiers: [], options: [])
+                
+                content.categoryIdentifier = "actionCategory"
+                
+                UNUserNotificationCenter.current().setNotificationCategories(
+                    [category])
+    
+        
+        
+    }
 
-
+    func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
+        if region is CLCircularRegion {
+            handleEvent(forRegion: region)
+            let alert = UIAlertController(title: "enter alert", message: "entered region", preferredStyle: .alert)
+            let action = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+            alert.addAction(action)
+            self.window?.rootViewController?.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
+        if region is CLCircularRegion {
+            handleEvent(forRegion: region)
+            let alert = UIAlertController(title: "exit alert", message: "exit successful", preferredStyle: .alert)
+            let action = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+            alert.addAction(action)
+            self.window?.rootViewController?.present(alert, animated: true, completion: nil)
+        }
+    }
+    func locationManager(_ manager: CLLocationManager, didStartMonitoringFor region: CLRegion)
+    {
+        let alert = UIAlertController(title: "monitor alert", message: "started monitoring", preferredStyle: .alert)
+        let action = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+        alert.addAction(action)
+        self.window?.rootViewController?.present(alert, animated: true, completion: nil)
+    }
 }
 
