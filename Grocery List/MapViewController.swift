@@ -40,6 +40,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         {
             saveAdd.setTitle(name, for: .normal)
             setAnnotation(location: coordinate)
+            let gestureRecognizer = UITapGestureRecognizer(target: self, action:#selector(handleTap(gestureReconizer:)))
+            mapView.addGestureRecognizer(gestureRecognizer)
         }
         else
         {
@@ -71,6 +73,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     
 
     @objc func handleTap(gestureReconizer: UILongPressGestureRecognizer) {
+        address = ""
         mapView.showsUserLocation = true
         let allAnnotations = self.mapView.annotations
         self.mapView.removeAnnotations(allAnnotations)
@@ -85,9 +88,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         annotation.coordinate = coordinate
         annotation.title = "My location"
         mapView.addAnnotation(annotation)
+        setSearch(LocCoordinate:coordinate)
         getAddress(coordinate:coordinate)
-        
-        
     }
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation])
     {
@@ -194,6 +196,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
                 if (placeMark?.name) != nil
                 {
                     self.address.append((placeMark?.name!)! + ",")
+                    self.name = placeMark?.name
                 }
                 if (placeMark?.locality) != nil
                 {
@@ -211,10 +214,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
                 {
                     self.address.append((placeMark?.country!)! + ",")
                 }
-                if self.flag == 0
-                {
-                    self.checkAddress(address: self.address)
-                }
+               
+                self.checkAddress(address: self.address)
                 
             }
         })
@@ -229,6 +230,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     }
     func returnData()
     {
+        saveAdd.setTitle(name, for: .normal)
         UserDefaults.standard.set(name, forKey: "Place")
         UserDefaults.standard.set(searchLoc.latitude, forKey: "Latitude")
         UserDefaults.standard.set(searchLoc.longitude, forKey: "Longitude")
@@ -244,6 +246,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         currannotation.title = "Current location"
         mapView.addAnnotation(currannotation)
         mapView.showsUserLocation = false
+        UserDefaults.standard.set(nil, forKey: "Place")
+        UserDefaults.standard.set(nil, forKey: "Latitude")
+        UserDefaults.standard.set(nil, forKey: "Longitude")
+        saveAdd.setTitle("Search Places", for: .normal)
     }
     @IBAction func saveAddress(sender : UIButton)
     {

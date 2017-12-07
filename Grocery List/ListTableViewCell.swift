@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ListTableViewCell: UITableViewCell {
+class ListTableViewCell: UITableViewCell, UITextFieldDelegate {
     @IBOutlet var listText : UITextField!
     @IBOutlet var addButton : UIButton!
     @IBOutlet var stepper : UIStepper!
@@ -18,6 +18,7 @@ class ListTableViewCell: UITableViewCell {
         super.awakeFromNib()
         stepper.wraps = true
         stepper.autorepeat = true
+        listText.delegate = self
         // Initialization code
     }
 
@@ -28,6 +29,11 @@ class ListTableViewCell: UITableViewCell {
     }
     @IBAction func stepperValueChanged(sender: UIStepper) {
         count.text = Int(sender.value).description
+    }
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool // called when 'return' key pressed. return false to ignore.
+    {
+        textField.resignFirstResponder()
+        return true
     }
 
 }

@@ -27,7 +27,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
    
     let requestIdentifier = "SampleRequest"
     let center = UNUserNotificationCenter.current()
-    var name  = "dcdc"
+    var name = ""
+
    
 
 
@@ -42,8 +43,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         GMSPlacesClient.provideAPIKey("AIzaSyBSdPfzt7bGUu2u5JaH3xig-DzhnXSGGWU")
         locationManager.delegate = self
         locationManager.requestAlwaysAuthorization()
-        notify()
-        
+        center.requestAuthorization(options: options) {
+            (granted, error) in
+            if !granted {
+                print("Something went wrong")
+            }
+        }
+
         // Override point for customization after application launch.
         return true
     }
@@ -56,7 +62,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     func applicationDidEnterBackground(_ application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-        notify()
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
@@ -74,49 +79,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         // Show an alert if application is active
         
             // Otherwise present a local notification
-                let center = UNUserNotificationCenter.current()
-                center.delegate = self
-                let content = UNMutableNotificationContent()
-                content.title = "Grocery List"
-                content.body = "Your list \(region.identifier) is ready. Enjoy Shopping!"
-                content.sound = UNNotificationSound.default()
-                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1.0,
-                                                                repeats: false)
-                
-                
-                let request = UNNotificationRequest(identifier: requestIdentifier,
-                                                    content: content, trigger: trigger)
-                center.add(request, withCompletionHandler: { (error) in
-                    if let error = error {
-                        print(error)
-                    }
-                })
-    }
-
-    func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
-        if region is CLCircularRegion {
-            handleEvent(forRegion: region)
-        }
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
-        if region is CLCircularRegion {
-            handleEvent(forRegion: region)
-        }
-    }
-    func locationManager(_ manager: CLLocationManager, didStartMonitoringFor region: CLRegion)
-    {
-        print("Started")
-    }
-    func notify()
-    {
-       name = "dcdc"
         let snoozeAction = UNNotificationAction(identifier: "Show",
-                                                title: "Show", options: [])
+                                                title: "Show", options: [UNNotificationActionOptions.foreground])
         let deleteAction = UNNotificationAction(identifier: "Delete",
                                                 title: "Delete", options: [.destructive])
         
-      
+        
         
         let category = UNNotificationCategory(identifier: "Actions",
                                               actions: [snoozeAction,deleteAction],
@@ -127,9 +95,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         center.setNotificationCategories([category])
         let content = UNMutableNotificationContent()
         content.title = "Grocery List"
-        content.body = "Your list is ready. Enjoy Shopping!"
+        content.body = "Your list \(region.identifier) is ready. Enjoy Shopping!"
         content.sound = UNNotificationSound.default()
         content.categoryIdentifier = "Actions"
+        name = region.identifier
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1.0,
                                                         repeats: false)
         
@@ -142,6 +111,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             }
         })
     }
+
+    func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
+        if region is CLCircularRegion {
+            handleEvent(forRegion: region)
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
+        if region is CLCircularRegion {
+       
+        }
+    }
+    func locationManager(_ manager: CLLocationManager, didStartMonitoringFor region: CLRegion)
+    {
+        print("Started")
+    }
+   
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 willPresent notification: UNNotification,
                                 withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
@@ -152,12 +138,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
-        
         // Determine the user action
         switch response.actionIdentifier {
         case UNNotificationDismissActionIdentifier:
             print("Dismiss Action")
         case UNNotificationDefaultActionIdentifier:
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            
+            let destinationViewController = storyboard.instantiateViewController(withIdentifier: "ListItemsViewController") as! ListItemsViewController
+            
+            let navigationController = self.window?.rootViewController as! UINavigationController
+            destinationViewController.name = name
+            destinationViewController.flag = 1
+            navigationController.pushViewController(destinationViewController, animated: true)
             print("Default")
         case "Show":
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -167,7 +160,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
             let navigationController = self.window?.rootViewController as! UINavigationController
             destinationViewController.name = name
             destinationViewController.flag = 1
-            navigationController.pushViewController(destinationViewController, animated: false)
+            navigationController.pushViewController(destinationViewController, animated: true)
             print("Show")
         case "Delete":
             print("Delete")
@@ -176,5 +169,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         }
         completionHandler()
     }
+    
 }
 

@@ -225,18 +225,18 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
                 print(myJSONError)
             }
         }
+        if listName.text == nil || listName.text == ""
+        {
+            let alert = UIAlertController(title: "Grocery List", message: "Enter Valid List Name", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+        else
+        {
         retrievedata()
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         if flag == 0
         {
-            if listName.text == nil || listName.text == ""
-            {
-                let alert = UIAlertController(title: "Grocery List", message: "Enter Valid List Name", preferredStyle: UIAlertControllerStyle.alert)
-                alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
-            }
-            else
-            {
                 let entityList =  NSEntityDescription.entity(forEntityName: "List", in: appDelegate.managedObjectContext!)
                 
                 let list = NSManagedObject(entity: entityList!, insertInto: appDelegate.managedObjectContext)
@@ -265,6 +265,7 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
                         let geo = CLLocationCoordinate2DMake(lat, long);
                         let region = CLCircularRegion(center:geo , radius: 200, identifier: listName.text!)
                         locationManager.startMonitoring(for: region)
+                        item.setValue("\(lat)+\(long)+\(region.identifier)", forKey: "geotification")
                     }
                 }
                 do {
@@ -274,10 +275,34 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
                 {
                     print("Could not save \(error), \(error.userInfo)")
                 } catch {}
-            }
+            
         }
         else
         {
+            let requestList:NSFetchRequest<List>
+            requestList = NSFetchRequest<List>(entityName: "List")
+            do
+            {
+                let entities = try appDelegate.managedObjectContext?.fetch(requestList)
+                for item in entities!
+                {
+                    for key in item.entity.attributesByName.keys
+                    {
+                        if key == "id" && item.value(forKey: key) as? Int! == id
+                        {
+                            item.setValue(listName.text, forKey: "name")
+                        }
+                    }
+                }
+                do {
+                    try appDelegate.managedObjectContext?.save()
+                    print("saved!")
+                } catch let error as NSError  {
+                    print("Could not save \(error), \(error.userInfo)")
+                }
+            }catch{
+                print("Unable to retrieve data")
+            }
             let requestItems:NSFetchRequest<Items>
             requestItems = NSFetchRequest<Items>(entityName: "Items")
             do
@@ -301,16 +326,28 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
                             }
                             else
                             {
+                                
                                 item.setValue(UserDefaults.standard.double(forKey: "Latitude"), forKey: "latitude")
                                 item.setValue(UserDefaults.standard.double(forKey: "Longitude"), forKey: "longitude")
                                 item.setValue(UserDefaults.standard.string(forKey: "Place"), forKey: "place")
                                 if setLocation == true
                                 {
+                                    if let loc = item.value(forKey: "geotification")
+                                    {
+                                        let location = "\(loc)"
+                                        let arr = location.split(separator: "+").map(String.init)
+                                        let lat = Double(arr[0])
+                                        let long = Double(arr[1])
+                                        let geo = CLLocationCoordinate2DMake(lat!, long!);
+                                        let region = CLCircularRegion(center: geo , radius: 200, identifier: arr[2])
+                                        locationManager.stopMonitoring(for: region)
+                                    }
                                     let lat = UserDefaults.standard.double(forKey: "Latitude")
                                     let long = UserDefaults.standard.double(forKey: "Longitude")
                                     let geo = CLLocationCoordinate2DMake(lat, long);
                                     let region = CLCircularRegion(center:geo , radius: 200, identifier: listName.text!)
                                     locationManager.startMonitoring(for: region)
+                                    item.setValue("\(lat)+\(long)+\(region.identifier)", forKey: "geotification")
                                 }
                             }
                         }
@@ -330,6 +367,7 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
         UserDefaults.standard.set(nil, forKey: "Latitude")
         UserDefaults.standard.set(nil, forKey: "Longitude")
         self.navigationController?.popViewController(animated: true)
+        }
     }
     func retrievedata()
     {

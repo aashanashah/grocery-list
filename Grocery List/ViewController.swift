@@ -10,15 +10,16 @@ import UIKit
 import CoreData
 import UserNotifications
 import UserNotificationsUI
+import CoreLocation
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate {
     @IBOutlet var addList : UIButton!
     
     @IBOutlet var listName : UITableView!
     
     let cellReuseIdentifier = "ListNameTableViewCell"
     var listNames : [String]!
-    
+    var locationManager : CLLocationManager = CLLocationManager()
     
 
     override func viewDidLoad() {
@@ -151,6 +152,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 {
                     if key == "id" && item.value(forKey: key) as? Int! == id
                     {
+                        if let loc = item.value(forKey: "geotification")
+                        {
+                            let location = "\(loc)"
+                            let arr = location.split(separator: "+").map(String.init)
+                            let lat = Double(arr[0])
+                            let long = Double(arr[1])
+                            let geo = CLLocationCoordinate2DMake(lat!, long!);
+                            let region = CLCircularRegion(center: geo , radius: 200, identifier: arr[2])
+                            locationManager.stopMonitoring(for: region)
+                        }
                         context?.delete(item)
                     }
                 }
