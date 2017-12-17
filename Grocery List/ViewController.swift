@@ -20,6 +20,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     let cellReuseIdentifier = "ListNameTableViewCell"
     var listNames : [String]!
     var locationManager : CLLocationManager = CLLocationManager()
+    var delete = 0
     
 
     override func viewDidLoad() {
@@ -27,6 +28,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         addList.layer.cornerRadius = 10
         addList.layer.borderWidth = 1
         addList.layer.borderColor = UIColor.black.cgColor
+        self.title = "Lists"
+        let btn1 = UIButton(type: .custom)
+        btn1.titleLabel?.font =  UIFont(name: "American Typewriter", size: 18)
+        btn1.backgroundColor = .clear
+        btn1.setTitle("Edit", for: .normal)
+        btn1.setTitleColor(UIColor.black, for: .normal)
+        btn1.frame = CGRect(x: 0, y: 0, width: 50, height: 25)
+        btn1.addTarget(self, action: #selector(edit(sender:)), for: .touchUpInside)
+        let item1 = UIBarButtonItem(customView: btn1)
+        self.navigationItem.rightBarButtonItem = item1
         // Do any additional setup after loading the view, typically from a nib.
     }
 
@@ -36,7 +47,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     override func viewWillAppear(_ animated: Bool) {
         listNames = [String]()
-        
         retrievedata()
     }
    
@@ -56,8 +66,24 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     {
         let cell:ListNameTableViewCell = self.listName.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! ListNameTableViewCell
         cell.name.setTitle(listNames[indexPath.row], for: .normal)
-        
+        if delete == 1
+        {
+            cell.delete.isHidden = false
+            cell.delete.tag = indexPath.row
+            cell.delete.addTarget(self, action:#selector(onEditRow(sender:)), for: .touchUpInside)
+        }
+        else
+        {
+            cell.delete.isHidden = true
+        }
         return cell
+    }
+    @objc func onEditRow(sender:UIButton)
+    {
+        listNames.remove(at: sender.tag)
+        //listName.deleteRows(at: [sender], with: UITableViewRowAnimation.automatic)
+        deleteData(id : sender.tag+1)
+        listName.reloadData()
     }
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool
     {
@@ -235,6 +261,22 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }catch{
             print("Unable to retrieve data")
         }
+    }
+    @objc func edit(sender : UIButton)
+    {
+        if delete == 1
+        {
+            delete = 0
+        }
+        else
+        {
+            delete = 1
+        }
+        self.listName.reloadData()
+    }
+    @IBAction func onEdit(sender:UIButton)
+    {
+        
     }
 }
   

@@ -6,13 +6,11 @@ target 'Grocery List' do
   use_frameworks!
 
   # Pods for Grocery List
-
-    
     pod 'GooglePlaces'
     pod 'GooglePlacePicker'
     pod 'GoogleMaps'
     pod 'SVProgressHUD'
-
+    
   target 'Grocery ListTests' do
     inherit! :search_paths
     # Pods for testing

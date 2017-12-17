@@ -10,10 +10,11 @@ import UIKit
 
 class ListNameTableViewCell: UITableViewCell {
     @IBOutlet var name : UIButton!
-
+    @IBOutlet var listName : UITableView!
+    @IBOutlet var delete : UIButton!
     override func awakeFromNib() {
         super.awakeFromNib()
-        
+        delete.isHidden = true
         // Initialization code
     }
 
@@ -22,5 +23,8 @@ class ListNameTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-
+    @IBAction func onclick(sender : UIButton)
+    {
+        
+    }
 }

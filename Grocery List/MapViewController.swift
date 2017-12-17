@@ -29,8 +29,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     var flag = 0
 
     override func viewDidLoad() {
-        
-        super.viewDidLoad()
 
         // Do any additional setup after loading the view.
     }

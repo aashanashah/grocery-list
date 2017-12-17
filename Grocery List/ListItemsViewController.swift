@@ -52,6 +52,8 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
         addItems.layer.cornerRadius = 10
         addItems.layer.borderWidth = 1
         addItems.layer.borderColor = UIColor.black.cgColor
+        
+       
         self.locationManager.requestAlwaysAuthorization()
         self.locationManager.delegate = self
         // Do any additional setup after loading the view.
@@ -78,10 +80,12 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
             addItems.isHidden = false
             addImage.isHidden = false
             listTable.isHidden = true
+            updateList.setTitle("Add List", for: .normal)
             flag = 0
         }
         else
         {
+            updateList.setTitle("Update List", for: .normal)
             listName.text = name
             retrievedata()
             getList()
@@ -155,14 +159,33 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
         }
         return cell
     }
+    func alert()
+    {
+        let alert = UIAlertController(title: "Grocery List", message: "Enter valid item name and quantity", preferredStyle: .alert)
+        let action = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+        alert.addAction(action)
+        present(alert, animated: true, completion: nil)
+    }
     @objc func onaddRow(sender:UIButton)
     {
-        del = 1
-        listArray.append("")
-        countArr.append("0")
-        listTable.beginUpdates()
-        listTable.insertRows(at: [IndexPath(row: listArray.count-1, section: 0)], with: .automatic)
-        listTable.endUpdates()
+        let ind = sender.tag
+        let ndx = IndexPath(row:ind, section: 0)
+        let cell = listTable.cellForRow(at:ndx) as! ListTableViewCell
+        let txt = cell.listText.text
+        let qty = cell.count.text
+        if(qty! == "0" || txt == "")
+        {
+            alert()
+        }
+        else
+        {
+            del = 1
+            listArray.append("")
+            countArr.append("0")
+            listTable.beginUpdates()
+            listTable.insertRows(at: [IndexPath(row: listArray.count-1, section: 0)], with: .automatic)
+            listTable.endUpdates()
+        }
     }
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool
     {
@@ -555,12 +578,6 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     
-    func showAlert(withTitle title: String?, message: String?) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let action = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-        alert.addAction(action)
-        present(alert, animated: true, completion: nil)
-    }
     
 }
 

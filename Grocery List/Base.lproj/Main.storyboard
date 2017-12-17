@@ -49,7 +49,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yr4-5s-unL">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="335" height="43.5"/>
                                                     <fontDescription key="fontDescription" name="AmericanTypewriter" family="American Typewriter" pointSize="20"/>
                                                     <state key="normal" title="Button">
                                                         <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
@@ -58,15 +58,26 @@
                                                         <action selector="onClickItemWithSender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="rnr-Gl-RzE"/>
                                                     </connections>
                                                 </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pDn-7w-uEK">
+                                                    <rect key="frame" x="345" y="6" width="30" height="30"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="30" id="UGc-Dw-gcA"/>
+                                                        <constraint firstAttribute="width" constant="30" id="zNg-CN-jQL"/>
+                                                    </constraints>
+                                                    <state key="normal" image="minus"/>
+                                                </button>
                                             </subviews>
                                             <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="pDn-7w-uEK" secondAttribute="trailing" id="1OL-8h-XIZ"/>
                                                 <constraint firstItem="yr4-5s-unL" firstAttribute="leading" secondItem="lIg-hj-VAT" secondAttribute="leading" id="1rz-2R-YNw"/>
+                                                <constraint firstItem="pDn-7w-uEK" firstAttribute="centerY" secondItem="yr4-5s-unL" secondAttribute="centerY" id="5Wn-V2-xzz"/>
                                                 <constraint firstItem="yr4-5s-unL" firstAttribute="top" secondItem="lIg-hj-VAT" secondAttribute="top" id="Axo-se-91d"/>
                                                 <constraint firstAttribute="bottom" secondItem="yr4-5s-unL" secondAttribute="bottom" id="Rmg-Fk-rda"/>
-                                                <constraint firstAttribute="trailing" secondItem="yr4-5s-unL" secondAttribute="trailing" id="wsI-IX-bg2"/>
+                                                <constraint firstAttribute="trailing" secondItem="yr4-5s-unL" secondAttribute="trailing" constant="40" id="wsI-IX-bg2"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="delete" destination="pDn-7w-uEK" id="5YI-4Y-DdW"/>
                                             <outlet property="name" destination="yr4-5s-unL" id="pMH-c3-2AP"/>
                                         </connections>
                                     </tableViewCell>
@@ -207,7 +218,7 @@
                                                     </constraints>
                                                     <nil key="textColor"/>
                                                     <fontDescription key="fontDescription" name="AmericanTypewriter" family="American Typewriter" pointSize="18"/>
-                                                    <textInputTraits key="textInputTraits"/>
+                                                    <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                                 </textField>
                                                 <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="bhx-Cj-XwP">
                                                     <rect key="frame" x="100" y="55" width="94" height="29"/>
@@ -219,16 +230,24 @@
                                                         <action selector="stepperValueChangedWithSender:" destination="tuE-aP-dnS" eventType="valueChanged" id="ZT7-f5-cus"/>
                                                     </connections>
                                                 </stepper>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pYe-0f-Fad">
+                                                    <rect key="frame" x="345" y="59" width="20" height="20"/>
+                                                    <state key="normal" title="Button" image="minus"/>
+                                                </button>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="5hm-nr-oOb" firstAttribute="centerY" secondItem="jeq-LV-Pt9" secondAttribute="centerY" id="8F1-Dl-TmU"/>
                                                 <constraint firstItem="jeq-LV-Pt9" firstAttribute="top" secondItem="GTH-xM-gXx" secondAttribute="top" constant="10" id="BM1-oy-6DU"/>
+                                                <constraint firstItem="pYe-0f-Fad" firstAttribute="trailing" secondItem="5hm-nr-oOb" secondAttribute="trailing" id="Cip-xm-BEB"/>
+                                                <constraint firstItem="pYe-0f-Fad" firstAttribute="height" secondItem="5hm-nr-oOb" secondAttribute="height" id="FEx-Kd-njx"/>
                                                 <constraint firstItem="5hm-nr-oOb" firstAttribute="leading" secondItem="jeq-LV-Pt9" secondAttribute="trailing" constant="30" id="IU1-rP-Jwa"/>
                                                 <constraint firstItem="bhx-Cj-XwP" firstAttribute="leading" secondItem="4li-HZ-J5v" secondAttribute="trailing" constant="10" id="ONt-TJ-OG2"/>
                                                 <constraint firstItem="4li-HZ-J5v" firstAttribute="top" secondItem="jeq-LV-Pt9" secondAttribute="bottom" constant="15" id="R3r-fT-U0H"/>
                                                 <constraint firstItem="bhx-Cj-XwP" firstAttribute="centerY" secondItem="4li-HZ-J5v" secondAttribute="centerY" id="UWV-gE-Qzu"/>
                                                 <constraint firstItem="4li-HZ-J5v" firstAttribute="leading" secondItem="jeq-LV-Pt9" secondAttribute="leading" id="W8p-l1-XbI"/>
                                                 <constraint firstItem="jeq-LV-Pt9" firstAttribute="leading" secondItem="GTH-xM-gXx" secondAttribute="leading" constant="30" id="dGZ-hr-EAA"/>
+                                                <constraint firstItem="pYe-0f-Fad" firstAttribute="width" secondItem="5hm-nr-oOb" secondAttribute="width" id="o3m-Nu-nX7"/>
+                                                <constraint firstItem="pYe-0f-Fad" firstAttribute="centerY" secondItem="bhx-Cj-XwP" secondAttribute="centerY" id="tlr-lV-yAJ"/>
                                                 <constraint firstAttribute="trailing" secondItem="5hm-nr-oOb" secondAttribute="trailing" constant="10" id="ywC-S3-knR"/>
                                             </constraints>
                                         </tableViewCellContentView>
@@ -371,5 +390,6 @@
     </scenes>
     <resources>
         <image name="add" width="30" height="30"/>
+        <image name="minus" width="30" height="30"/>
     </resources>
 </document>
