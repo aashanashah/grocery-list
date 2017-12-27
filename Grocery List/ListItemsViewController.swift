@@ -12,9 +12,7 @@ import MapKit
 import CoreLocation
 import UserNotifications
 
-struct PreferencesKeys {
-    static let savedItems = "savedItems"
-}
+
 class ListItemsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, CLLocationManagerDelegate  {
     @IBOutlet var locationButton : UIButton!
     @IBOutlet var updateList: UIButton!
@@ -22,10 +20,12 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
     @IBOutlet var addItems : UIButton!
     @IBOutlet var addImage : UIImageView!
     @IBOutlet var listName : UITextField!
+    @IBOutlet var itemTable : UITableView!
     
     var data = [Dictionary<String,String>]()
     var items : String!
     var cellReuseIdentifier = "ListTableViewCell"
+    var cellReuseId = "ItemTableCell"
     var listArray = [""]
     var count = 1
     var name = ""
@@ -65,14 +65,25 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     override func viewWillAppear(_ animated: Bool)
     {
+        let btn1 = UIButton(type: .custom)
+        btn1.titleLabel?.font =  UIFont(name: "American Typewriter", size: 18)
+        btn1.backgroundColor = .clear
+        btn1.setTitle("Edit", for: .normal)
+        btn1.setTitleColor(UIColor.black, for: .normal)
+        btn1.frame = CGRect(x: 0, y: 0, width: 50, height: 25)
+        btn1.addTarget(self, action: #selector(edit(sender:)), for: .touchUpInside)
+        let item1 = UIBarButtonItem(customView: btn1)
+        self.navigationItem.rightBarButtonItem = item1
         listName.delegate = self
         del = 0
+        itemTable.isHidden = true
         if (UserDefaults.standard.string(forKey: "Place") != nil)
         {
             locationButton.setTitle(UserDefaults.standard.string(forKey: "Place"), for: .normal)
         }
         else if flag == 0
         {
+            self.title = "New List"
             UserDefaults.standard.set(nil, forKey: "Place")
             UserDefaults.standard.set(nil, forKey: "Latitude")
             UserDefaults.standard.set(nil, forKey: "Longitude")
@@ -80,11 +91,16 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
             addItems.isHidden = false
             addImage.isHidden = false
             listTable.isHidden = true
+            listArray = [""]
+            countArr = ["0"]
+            listTable.reloadData()
             updateList.setTitle("Add List", for: .normal)
             flag = 0
         }
         else
         {
+            itemTable.isHidden = false
+            self.title = name
             updateList.setTitle("Update List", for: .normal)
             listName.text = name
             retrievedata()
@@ -97,6 +113,7 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
                 addImage.isHidden = false
                 listTable.isHidden = true
                 listArray = [""]
+                countArr = ["0"]
                 listTable.reloadData()
             }
             else
@@ -108,10 +125,22 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
             
         }
     }
+    @objc func edit(sender : UIButton)
+    {
+        itemTable.isHidden = true
+        sender.isHidden = true
+    }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool
     {
         self.view.endEditing(true)
         return false
+    }
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView?
+    {
+        let footerView = UIView(frame: CGRect(x:0, y:0, width:Int(tableView.frame.size.width), height:Int(tableView.frame.size.height)))
+        footerView.backgroundColor = .clear
+        
+        return footerView
     }
     @IBAction func onCLickLocate(sender : UIButton)
     {
@@ -139,25 +168,34 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
         }
         self.navigationController?.pushViewController(mapViewController, animated: true)
     }
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
+    {
         return listArray.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
-        let cell:ListTableViewCell = self.listTable.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! ListTableViewCell
-        if flag == 0 || listArray[0] == ""
+       
+            let cell:ListTableViewCell = self.listTable.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! ListTableViewCell
+            let cellI:ItemTableCell = self.itemTable.dequeueReusableCell(withIdentifier: cellReuseId) as! ItemTableCell
+        
+                cell.listText.text = listArray[indexPath.row]
+                cell.count.text = countArr[indexPath.row]
+                cellI.itemName.text = listArray[indexPath.row]
+                cellI.quantity.text = countArr[indexPath.row]
+                cellI.srno.text = "\(indexPath.row+1)."
+                cell.addButton.addTarget(self, action:#selector(onaddRow(sender:)), for: .touchUpInside)
+                cell.delButton.addTarget(self, action:#selector(ondelRow(sender:)), for: .touchUpInside)
+                cell.listText.addTarget(self, action: #selector(UITextFieldDelegate.textFieldDidEndEditing(_:)), for: UIControlEvents.editingDidEnd)
+                cell.count.addTarget(self, action: #selector(UITextFieldDelegate.textFieldDidEndEditing(_:)), for: UIControlEvents.editingDidEnd)
+                cell.stepper.addTarget(self, action: #selector(stepperChange(_:)), for: .valueChanged)
+        if tableView == listTable
         {
-            cell.addButton.tag = indexPath.row;
-            cell.addButton.addTarget(self, action:#selector(onaddRow(sender:)), for: .touchUpInside)
+            return cell
         }
-        else
-        {
-            cell.listText.text = listArray[indexPath.row]
-            cell.count.text = countArr[indexPath.row]
-            cell.addButton.tag = indexPath.row;
-            cell.addButton.addTarget(self, action:#selector(onaddRow(sender:)), for: .touchUpInside)
-        }
-        return cell
+        
+        
+        return cellI
+        
     }
     func alert()
     {
@@ -166,52 +204,123 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
         alert.addAction(action)
         present(alert, animated: true, completion: nil)
     }
+    func textFieldDidEndEditing(_ textField: UITextField)
+    {
+        let cellPosition:CGPoint = textField.convert(CGPoint.zero, to:listTable)
+        let indexPath = listTable.indexPathForRow(at: cellPosition)
+        if textField.tag == 0
+        {
+            if let text = textField.text
+            {
+                listArray[(indexPath?.row)!] = text
+            }
+        }
+        else if textField.tag == 1
+        {
+            if let qty = textField.text
+            {
+                countArr[(indexPath?.row)!] = qty
+            }
+        }
+    }
+    
+   
+    @objc func stepperChange(_ sender: UIStepper)
+    {
+        let cellPosition:CGPoint = sender.convert(CGPoint.zero, to:listTable)
+        let indexPath = listTable.indexPathForRow(at: cellPosition)
+        let cell = listTable.cellForRow(at:indexPath!) as! ListTableViewCell
+        cell.count.resignFirstResponder()
+        cell.listText.resignFirstResponder()
+        cell.count.text = Int(sender.value).description
+        if let qty = cell.count.text
+        {
+            countArr[(indexPath?.row)!] = qty
+        }
+        
+    }
     @objc func onaddRow(sender:UIButton)
     {
-        let ind = sender.tag
-        let ndx = IndexPath(row:ind, section: 0)
-        let cell = listTable.cellForRow(at:ndx) as! ListTableViewCell
-        let txt = cell.listText.text
-        let qty = cell.count.text
-        if(qty! == "0" || txt == "")
+        listName.resignFirstResponder()
+        let cell:ListTableViewCell = self.listTable.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! ListTableViewCell
+        cell.listText.addTarget(self, action: #selector(UITextFieldDelegate.textFieldDidEndEditing(_:)), for: UIControlEvents.editingDidEnd)
+        cell.count.addTarget(self, action: #selector(UITextFieldDelegate.textFieldDidEndEditing(_:)), for: UIControlEvents.editingDidEnd)
+        if(listArray.contains("") || countArr.contains("0") || countArr.contains(""))
         {
             alert()
         }
         else
         {
             del = 1
+            listTable.beginUpdates()
             listArray.append("")
             countArr.append("0")
-            listTable.beginUpdates()
-            listTable.insertRows(at: [IndexPath(row: listArray.count-1, section: 0)], with: .automatic)
+            let indx = IndexPath(row:listArray.count-1, section: 0)
+            listTable.insertRows(at: [indx], with: .automatic)
             listTable.endUpdates()
         }
     }
+    @objc func ondelRow(sender: UIButton)
+    {
+        listName.resignFirstResponder()
+        let buttonPosition:CGPoint = sender.convert(CGPoint.zero, to:listTable)
+        let indexPath = listTable.indexPathForRow(at: buttonPosition)
+        listTable.beginUpdates()
+        if listArray.count == 1
+        {
+            listArray.remove(at: (indexPath?.row)!)
+            countArr.remove(at: (indexPath?.row)!)
+            addItems.isHidden = false
+            addImage.isHidden = false
+            listTable.isHidden = true
+        }
+        else
+        {
+            listArray.remove(at: (indexPath?.row)!)
+            countArr.remove(at: (indexPath?.row)!)
+        }
+        let cell = listTable.cellForRow(at:indexPath!) as! ListTableViewCell
+        cell.count.resignFirstResponder()
+        cell.listText.resignFirstResponder()
+        listTable.deleteRows(at: [indexPath!], with: UITableViewRowAnimation.automatic)
+        listTable.endUpdates()
+        listTable.reloadData()
+    }
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool
     {
-        return true
+        if tableView == listTable
+        {
+            return true
+        }
+        else
+        {
+            return false
+        }
     }
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath)
     {
         if (editingStyle == UITableViewCellEditingStyle.delete)
         {
-            // handle delete (by removing the data from your array and updating the tableview)
             listArray.remove(at: indexPath.row)
+            countArr.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.automatic)
             if listArray.isEmpty
             {
                 addItems.isHidden = false
                 addImage.isHidden = false
                 listTable.isHidden = true
-            }
-            if del == 0
-            {
-                deleteData(cellId : indexPath.row)
+                listArray.append("")
+                countArr.append("0")
+                listTable.reloadData()
             }
         }
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
     {
+        if tableView == itemTable
+        {
+            return 50
+        }
         return 100.0
     }
     @IBAction func clickAdd(sender : UIButton)
@@ -219,18 +328,18 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
         addItems.isHidden = true
         addImage.isHidden = true
         listTable.isHidden = false
+        listArray = [""]
+        countArr = ["0"]
+        listTable.reloadData()
     }
     @IBAction func updateList(sender : UIButton)
     {
         var i=0
         while i<listArray.count
         {
-            
-            let ndx = IndexPath(row:i, section: 0)
-            let cell = listTable.cellForRow(at:ndx) as! ListTableViewCell
-            let txt = cell.listText.text
-            let qty = cell.count.text
-            data.append(["name":txt!,"qty":qty!])
+            let txt = listArray[i]
+            let qty = countArr[i]
+            data.append(["name":txt,"qty":qty])
             i+=1
         }
         if data.count == 1 && data[0] == ["name": "", "qty": "0"]
@@ -576,8 +685,6 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
             self.setLocation = true
         }
     }
-    
-    
     
 }
 

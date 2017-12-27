@@ -13,15 +13,18 @@ class ListTableViewCell: UITableViewCell, UITextFieldDelegate {
     @IBOutlet var addButton : UIButton!
     @IBOutlet var stepper : UIStepper!
     @IBOutlet var count : UITextField!
+    @IBOutlet var delButton : UIButton!
     let button = UIButton(type: UIButtonType.custom)
+   
 
-    override func awakeFromNib() {
+    override func awakeFromNib()
+    {
         super.awakeFromNib()
         stepper.wraps = true
         stepper.autorepeat = true
         listText.delegate = self
+        stepper.value = Double(count.text!)!
         self.addDoneButtonOnKeyboard()
-        
         // Initialization code
     }
 
@@ -30,9 +33,7 @@ class ListTableViewCell: UITableViewCell, UITextFieldDelegate {
 
         // Configure the view for the selected state
     }
-    @IBAction func stepperValueChanged(sender: UIStepper) {
-        count.text = Int(sender.value).description
-    }
+   
     func textFieldShouldReturn(_ textField: UITextField) -> Bool // called when 'return' key pressed. return false to ignore.
     {
         textField.resignFirstResponder()

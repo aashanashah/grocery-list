@@ -81,7 +81,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @objc func onEditRow(sender:UIButton)
     {
         listNames.remove(at: sender.tag)
-        //listName.deleteRows(at: [sender], with: UITableViewRowAnimation.automatic)
         deleteData(id : sender.tag+1)
         listName.reloadData()
     }
@@ -98,6 +97,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.automatic)
             deleteData(id : indexPath.row+1)
         }
+    }
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView?
+    {
+        let footerView = UIView(frame: CGRect(x:0, y:0, width:Int(tableView.frame.size.width), height:Int(tableView.frame.size.height)))
+        footerView.backgroundColor = .clear
+        
+        return footerView
     }
     func retrievedata()
     {
@@ -273,10 +279,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             delete = 1
         }
         self.listName.reloadData()
-    }
-    @IBAction func onEdit(sender:UIButton)
-    {
-        
     }
 }
   
