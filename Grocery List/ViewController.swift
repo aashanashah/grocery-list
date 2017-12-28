@@ -29,15 +29,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         addList.layer.borderWidth = 1
         addList.layer.borderColor = UIColor.black.cgColor
         self.title = "Lists"
-        let btn1 = UIButton(type: .custom)
-        btn1.titleLabel?.font =  UIFont(name: "American Typewriter", size: 18)
-        btn1.backgroundColor = .clear
-        btn1.setTitle("Edit", for: .normal)
-        btn1.setTitleColor(UIColor.black, for: .normal)
-        btn1.frame = CGRect(x: 0, y: 0, width: 50, height: 25)
-        btn1.addTarget(self, action: #selector(edit(sender:)), for: .touchUpInside)
-        let item1 = UIBarButtonItem(customView: btn1)
-        self.navigationItem.rightBarButtonItem = item1
         // Do any additional setup after loading the view, typically from a nib.
     }
 
@@ -48,6 +39,24 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     override func viewWillAppear(_ animated: Bool) {
         listNames = [String]()
         retrievedata()
+        let btn1 = UIButton(type: .custom)
+        btn1.titleLabel?.font =  UIFont(name: "American Typewriter", size: 18)
+        btn1.backgroundColor = .clear
+        btn1.setTitle("Edit", for: .normal)
+        btn1.tag = 1
+        btn1.setTitleColor(UIColor.black, for: .normal)
+        btn1.frame = CGRect(x: 0, y: 0, width: 50, height: 25)
+        btn1.addTarget(self, action: #selector(edit(sender:)), for: .touchUpInside)
+        let item1 = UIBarButtonItem(customView: btn1)
+        self.navigationItem.rightBarButtonItem = item1
+        if listNames.isEmpty
+        {
+            btn1.isHidden = true
+        }
+        else
+        {
+            btn1.isHidden = false
+        }
     }
    
     @IBAction func addList(sender : UIButton!)
@@ -76,6 +85,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         {
             cell.delete.isHidden = true
         }
+        cell.preservesSuperviewLayoutMargins = false
+        cell.separatorInset = UIEdgeInsets.zero
+        cell.layoutMargins = UIEdgeInsets.zero
         return cell
     }
     @objc func onEditRow(sender:UIButton)
@@ -272,10 +284,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     {
         if delete == 1
         {
+            sender.setTitle("Edit", for: .normal)
             delete = 0
         }
         else
         {
+            sender.setTitle("Done", for: .normal)
             delete = 1
         }
         self.listName.reloadData()

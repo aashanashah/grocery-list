@@ -128,7 +128,7 @@
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lu2-4t-BaO">
                                 <rect key="frame" x="160" y="40" width="185" height="30"/>
-                                <color key="backgroundColor" red="1" green="0.81764149350000004" blue="0.36884548610000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" red="0.83556344021835172" green="0.83815141011154393" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="Y7b-ap-sht"/>
                                 </constraints>
@@ -150,7 +150,7 @@
                                 <rect key="frame" x="160" y="100" width="185" height="30"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Items" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HD0-Q3-HbG">
                                 <rect key="frame" x="30" y="160" width="100" height="23.5"/>
@@ -200,7 +200,7 @@
                                                     </constraints>
                                                     <nil key="textColor"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <textInputTraits key="textInputTraits"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
                                                 </textField>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5hm-nr-oOb">
                                                     <rect key="frame" x="345" y="15" width="20" height="20"/>
@@ -248,6 +248,7 @@
                                                 <constraint firstAttribute="trailing" secondItem="5hm-nr-oOb" secondAttribute="trailing" constant="10" id="ywC-S3-knR"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" red="0.83611559063537189" green="1" blue="0.94506279743316379" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <connections>
                                             <outlet property="addButton" destination="5hm-nr-oOb" id="Deg-83-ocl"/>
                                             <outlet property="count" destination="4li-HZ-J5v" id="BKG-MA-L6y"/>

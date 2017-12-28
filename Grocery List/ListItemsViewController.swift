@@ -45,7 +45,6 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
         locationButton.layer.cornerRadius = 10
         locationButton.layer.borderWidth = 1
         locationButton.layer.borderColor = UIColor.black.cgColor
-        
         updateList.layer.cornerRadius = 10
         updateList.layer.borderWidth = 1
         updateList.layer.borderColor = UIColor.black.cgColor
@@ -53,7 +52,6 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
         addItems.layer.borderWidth = 1
         addItems.layer.borderColor = UIColor.black.cgColor
         
-       
         self.locationManager.requestAlwaysAuthorization()
         self.locationManager.delegate = self
         // Do any additional setup after loading the view.
@@ -83,6 +81,7 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
         }
         else if flag == 0
         {
+            btn1.isHidden = true
             self.title = "New List"
             UserDefaults.standard.set(nil, forKey: "Place")
             UserDefaults.standard.set(nil, forKey: "Latitude")
@@ -142,6 +141,23 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
         
         return footerView
     }
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView?
+    {
+        let cellI:ItemTableCell = self.itemTable.dequeueReusableCell(withIdentifier: cellReuseId) as! ItemTableCell
+        if tableView == itemTable
+        {
+            cellI.backgroundColor = UIColor.cyan
+            cellI.srno.text = "Sr.no";
+            cellI.itemName.text = "Item Name"
+            cellI.quantity.text = "Qty"
+            cellI.isHidden = false
+        }
+        else
+        {
+            cellI.isHidden = true
+        }
+        return cellI
+    }
     @IBAction func onCLickLocate(sender : UIButton)
     {
         let mapViewController = self.storyboard?.instantiateViewController(withIdentifier: "MapViewController") as! MapViewController
@@ -193,7 +209,12 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
             return cell
         }
         
-        
+        cell.preservesSuperviewLayoutMargins = false
+        cell.separatorInset = UIEdgeInsets.zero
+        cell.layoutMargins = UIEdgeInsets.zero
+        cellI.preservesSuperviewLayoutMargins = false
+        cellI.separatorInset = UIEdgeInsets.zero
+        cellI.layoutMargins = UIEdgeInsets.zero
         return cellI
         
     }
