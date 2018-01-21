@@ -29,7 +29,6 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
     var listArray = [""]
     var count = 1
     var name = ""
-    var id : Int!
     var flag = 0
     var countArr = [""]
     var coordinate : CLLocationCoordinate2D!
@@ -37,7 +36,7 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
     var del = 0
     var locationManager : CLLocationManager = CLLocationManager()
     var setLocation = false
- 
+    var itemId : Int!
     
     override func viewDidLoad()
     {
@@ -72,6 +71,14 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
         btn1.addTarget(self, action: #selector(edit(sender:)), for: .touchUpInside)
         let item1 = UIBarButtonItem(customView: btn1)
         self.navigationItem.rightBarButtonItem = item1
+        listTable.separatorStyle = UITableViewCellSeparatorStyle.singleLine
+        listTable.separatorColor = UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 1.0)
+        itemTable.separatorStyle = UITableViewCellSeparatorStyle.singleLine
+        itemTable.separatorColor = UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 1.0)
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard (_:)))
+        tapGesture.cancelsTouchesInView = true
+        self.listTable.addGestureRecognizer(tapGesture)
+        self.view.addGestureRecognizer(tapGesture)
         listName.delegate = self
         del = 0
         itemTable.isHidden = true
@@ -121,7 +128,6 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
                 addImage.isHidden = true
                 listTable.isHidden = false
             }
-            
         }
     }
     @objc func edit(sender : UIButton)
@@ -238,8 +244,10 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
         }
         else if textField.tag == 1
         {
+            let cell = listTable.cellForRow(at:indexPath!) as! ListTableViewCell
             if let qty = textField.text
             {
+                cell.stepper.value = Double(cell.count.text!)!
                 countArr[(indexPath?.row)!] = qty
             }
         }
@@ -253,12 +261,11 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
         let cell = listTable.cellForRow(at:indexPath!) as! ListTableViewCell
         cell.count.resignFirstResponder()
         cell.listText.resignFirstResponder()
-        cell.count.text = Int(sender.value).description
+        cell.count.text = "\(Int(sender.value))"
         if let qty = cell.count.text
         {
             countArr[(indexPath?.row)!] = qty
         }
-        
     }
     @objc func onaddRow(sender:UIButton)
     {
@@ -266,6 +273,12 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
         let cell:ListTableViewCell = self.listTable.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! ListTableViewCell
         cell.listText.addTarget(self, action: #selector(UITextFieldDelegate.textFieldDidEndEditing(_:)), for: UIControlEvents.editingDidEnd)
         cell.count.addTarget(self, action: #selector(UITextFieldDelegate.textFieldDidEndEditing(_:)), for: UIControlEvents.editingDidEnd)
+        var i=0
+        while(i<listArray.count)
+        {
+            listArray[i] = listArray[i].trimmingCharacters(in: .whitespacesAndNewlines)
+            i+=1
+        }
         if(listArray.contains("") || countArr.contains("0") || countArr.contains(""))
         {
             alert()
@@ -356,6 +369,13 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
     @IBAction func updateList(sender : UIButton)
     {
         var i=0
+        listTable.endEditing(true)
+        if(listArray.contains("") || countArr.contains("0") || countArr.contains(""))
+        {
+            alert()
+        }
+        else
+        {
         while i<listArray.count
         {
             let txt = listArray[i]
@@ -441,7 +461,7 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
                 {
                     for key in item.entity.attributesByName.keys
                     {
-                        if key == "id" && item.value(forKey: key) as? Int! == id
+                        if key == "id" && item.value(forKey: key) as? Int! == itemId
                         {
                             item.setValue(listName.text, forKey: "name")
                         }
@@ -465,7 +485,7 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
                 {
                     for key in item.entity.attributesByName.keys
                     {
-                        if key == "id" && item.value(forKey: key) as? Int! == id
+                        if key == "id" && item.value(forKey: key) as? Int! == itemId
                         {
                             item.setValue(items, forKey: "item")
                             if UserDefaults.standard.string(forKey: "Latitude") == nil || UserDefaults.standard.double(forKey: "Latitude") == 0.0
@@ -521,6 +541,7 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
         UserDefaults.standard.set(nil, forKey: "Longitude")
         self.navigationController?.popViewController(animated: true)
         }
+        }
     }
     func retrievedata()
     {
@@ -551,26 +572,9 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
         listArray = []
         countArr = []
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let requestList:NSFetchRequest<List>
-        requestList = NSFetchRequest<List>(entityName: "List")
+        
         let requestItems:NSFetchRequest<Items>
         requestItems = NSFetchRequest<Items>(entityName: "Items")
-        do
-        {
-            let entities = try appDelegate.managedObjectContext?.fetch(requestList)
-            for item in entities!
-            {
-                for key in item.entity.attributesByName.keys
-                {
-                    if key == "name" && "\(item.value(forKey: key)!)" == listName.text
-                    {
-                        id = item.value(forKey: "id") as? Int!
-                    }
-                }
-            }
-        }catch{
-            print("Unable to retrieve data")
-        }
         do
         {
             let entities = try appDelegate.managedObjectContext?.fetch(requestItems)
@@ -578,7 +582,7 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
             {
                 for key in item.entity.attributesByName.keys
                 {
-                    if key == "id" && item.value(forKey: key) as? Int! == id
+                    if key == "id" && item.value(forKey: key) as? Int! == itemId
                     {
                         let fetchedItems = item.value(forKey: "item") as! String
                         if let data = fetchedItems.data(using: .utf8)
@@ -611,7 +615,7 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
             {
                 for key in item.entity.attributesByName.keys
                 {
-                    if key == "id" && item.value(forKey: key) as? Int! == id
+                    if key == "id" && item.value(forKey: key) as? Int! == itemId
                     {
                         let fetchedItems = item.value(forKey: "item") as! String
                         if let data = fetchedItems.data(using: .utf8)
@@ -651,26 +655,8 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
     func getLoc()
     {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let requestList:NSFetchRequest<List>
-        requestList = NSFetchRequest<List>(entityName: "List")
         let requestItems:NSFetchRequest<Items>
         requestItems = NSFetchRequest<Items>(entityName: "Items")
-        do
-        {
-            let entities = try appDelegate.managedObjectContext?.fetch(requestList)
-            for item in entities!
-            {
-                for key in item.entity.attributesByName.keys
-                {
-                    if key == "name" && "\(item.value(forKey: key)!)" == listName.text
-                    {
-                        id = item.value(forKey: "id") as? Int!
-                    }
-                }
-            }
-        }catch{
-            print("Unable to retrieve data")
-        }
         do
         {
             let entities = try appDelegate.managedObjectContext?.fetch(requestItems)
@@ -678,7 +664,7 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
             {
                 for key in item.entity.attributesByName.keys
                 {
-                    if key == "id" && item.value(forKey: key) as? Int! == id
+                    if key == "id" && item.value(forKey: key) as? Int! == itemId
                     {
                         place = "\(item.value(forKey: "place")!)"
                         
@@ -701,10 +687,16 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
         }
     }
   
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        if (status == CLAuthorizationStatus.authorizedAlways) {
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus)
+    {
+        if (status == CLAuthorizationStatus.authorizedAlways)
+        {
             self.setLocation = true
         }
+    }
+    @objc func dismissKeyboard (_ sender: UITapGestureRecognizer)
+    {
+        listTable.endEditing(true)
     }
     
 }

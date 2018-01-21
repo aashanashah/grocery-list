@@ -23,7 +23,6 @@ class ListTableViewCell: UITableViewCell, UITextFieldDelegate {
         stepper.wraps = true
         stepper.autorepeat = true
         listText.delegate = self
-        stepper.value = Double(count.text!)!
         self.addDoneButtonOnKeyboard()
         // Initialization code
     }

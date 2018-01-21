@@ -2,8 +2,8 @@
 //  AppDelegate.swift
 //  Grocery List
 //
-//  Created by Aashana on 11/6/17.
-//  Copyright © 2017 Aashana. All rights reserved.
+//  Created by Aashana Shah on 11/6/17.
+//  Copyright © 2017 Aashana Shah. All rights reserved.
 //
 
 import UIKit
@@ -18,26 +18,26 @@ import CoreLocation
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate, UNUserNotificationCenterDelegate {
-
+    
     var window: UIWindow?
     var coreDataManager: CoreDataManager?
     var managedObjectContext: NSManagedObjectContext?
     let locationManager = CLLocationManager()
     let options: UNAuthorizationOptions = [.alert, .sound, .badge];
-   
     let requestIdentifier = "SampleRequest"
     let center = UNUserNotificationCenter.current()
     var name = ""
-
-   
-
-
+    
+    //MARK:    Application Life Cycle
+    
+    //Function that sets navigation for the flow from the main viewController, sets db and asks users for permission
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        // For use in foreground
         let appdelegate = UIApplication.shared.delegate as! AppDelegate
         let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
         let homeViewController = mainStoryboard.instantiateViewController(withIdentifier: "ViewController") as! ViewController
         let nav = UINavigationController(rootViewController: homeViewController)
-        appdelegate.window!.rootViewController = nav // For use in foreground
+        appdelegate.window!.rootViewController = nav
         coreDataManager = CoreDataManager(modelName: "Grocery")
         managedObjectContext = coreDataManager?.managedObjectContext
         GMSPlacesClient.provideAPIKey("AIzaSyBSdPfzt7bGUu2u5JaH3xig-DzhnXSGGWU")
@@ -49,7 +49,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                 print("Something went wrong")
             }
         }
-
         // Override point for customization after application launch.
         return true
     }
@@ -77,8 +76,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     }
     func handleEvent(forRegion region: CLRegion!) {
         // Show an alert if application is active
-        
-            // Otherwise present a local notification
+        // Otherwise present a local notification
         let snoozeAction = UNNotificationAction(identifier: "Show",
                                                 title: "Show", options: [UNNotificationActionOptions.foreground])
         let deleteAction = UNNotificationAction(identifier: "Delete",
@@ -112,60 +110,64 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         })
     }
 
+    //Function called when user enters the region within a specific radius
     func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
         if region is CLCircularRegion {
             handleEvent(forRegion: region)
         }
     }
     
+    //Function called when user exits the region
     func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
         if region is CLCircularRegion {
-       
         }
     }
-    func locationManager(_ manager: CLLocationManager, didStartMonitoringFor region: CLRegion)
-    {
+    
+    //Function that starts monitoring the registered region
+    func locationManager(_ manager: CLLocationManager, didStartMonitoringFor region: CLRegion) {
         print("Started")
     }
-   
-    func userNotificationCenter(_ center: UNUserNotificationCenter,
-                                willPresent notification: UNNotification,
-                                withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+    
+    //Function that notifies the entry of user in the registered region
+    func userNotificationCenter(_
+        center: UNUserNotificationCenter,
+        willPresent notification: UNNotification,
+        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         // Play sound and show alert to the user
         completionHandler([.alert,.sound,.badge])
     }
     
-    func userNotificationCenter(_ center: UNUserNotificationCenter,
-                                didReceive response: UNNotificationResponse,
-                                withCompletionHandler completionHandler: @escaping () -> Void) {
+    // Function that displays options for notification
+    func userNotificationCenter(_
+        center: UNUserNotificationCenter,
+        didReceive response: UNNotificationResponse,
+        withCompletionHandler completionHandler: @escaping () -> Void) {
         // Determine the user action
         switch response.actionIdentifier {
-        case UNNotificationDismissActionIdentifier:
-            print("Dismiss Action")
-        case UNNotificationDefaultActionIdentifier:
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            
-            let destinationViewController = storyboard.instantiateViewController(withIdentifier: "ListItemsViewController") as! ListItemsViewController
-            
-            let navigationController = self.window?.rootViewController as! UINavigationController
-            destinationViewController.name = name
-            destinationViewController.flag = 1
-            navigationController.pushViewController(destinationViewController, animated: true)
-            print("Default")
-        case "Show":
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            case UNNotificationDismissActionIdentifier:
+                print("Dismiss Action")
+            case UNNotificationDefaultActionIdentifier:
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                let destinationViewController = storyboard.instantiateViewController(withIdentifier: "ListItemsViewController") as! ListItemsViewController
+                let navigationController = self.window?.rootViewController as! UINavigationController
+                destinationViewController.name = name
+                destinationViewController.flag = 1
+                navigationController.pushViewController(destinationViewController, animated: true)
+                print("Default")
+            case "Show":
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
 
-            let destinationViewController = storyboard.instantiateViewController(withIdentifier: "ListItemsViewController") as! ListItemsViewController
+                let destinationViewController = storyboard.instantiateViewController(withIdentifier: "ListItemsViewController") as! ListItemsViewController
 
-            let navigationController = self.window?.rootViewController as! UINavigationController
-            destinationViewController.name = name
-            destinationViewController.flag = 1
-            navigationController.pushViewController(destinationViewController, animated: true)
-            print("Show")
-        case "Delete":
-            print("Delete")
-        default:
-            print("Unknown action")
+                let navigationController = self.window?.rootViewController as! UINavigationController
+                destinationViewController.name = name
+                destinationViewController.flag = 1
+                navigationController.pushViewController(destinationViewController, animated: true)
+                print("Show")
+            case "Delete":
+                print("Delete")
+            default:
+                print("Unknown action")
         }
         completionHandler()
     }

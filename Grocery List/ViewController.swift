@@ -19,11 +19,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     let cellReuseIdentifier = "ListNameTableViewCell"
     var listNames : [String]!
+    var places : [String]!
+    var ids : [String]!
     var locationManager : CLLocationManager = CLLocationManager()
     var delete = 0
     
 
-    override func viewDidLoad() {
+    override func viewDidLoad()
+    {
         super.viewDidLoad()
         addList.layer.cornerRadius = 10
         addList.layer.borderWidth = 1
@@ -38,6 +41,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     override func viewWillAppear(_ animated: Bool) {
         listNames = [String]()
+        places = [String]()
+        ids = [String]()
         retrievedata()
         let btn1 = UIButton(type: .custom)
         btn1.titleLabel?.font =  UIFont(name: "American Typewriter", size: 18)
@@ -74,7 +79,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
         let cell:ListNameTableViewCell = self.listName.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! ListNameTableViewCell
-        cell.name.setTitle(listNames[indexPath.row], for: .normal)
+        cell.name.setTitle("  \(ids[indexPath.row]). \(listNames[indexPath.row]) (\(places[indexPath.row]))", for: .normal)
         if delete == 1
         {
             cell.delete.isHidden = false
@@ -122,29 +127,69 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let request:NSFetchRequest<List>
         request = NSFetchRequest<List>(entityName: "List")
+        let requestItems:NSFetchRequest<Items>
+        requestItems = NSFetchRequest<Items>(entityName: "Items")
         do
         {
             let entities = try appDelegate.managedObjectContext?.fetch(request)
             for item in entities!
             {
-                for key in item.entity.attributesByName.keys
-                {
-                    if key == "name"
-                    {
-                        var value: Any? = item.value(forKey: key)
-                        if value == nil
+                //for key in item.entity.attributesByName.keys
+                //{
+                    //if key == "name"
+                    //{
+                        let nameValue: Any? = item.value(forKey: "name")
+                 let IdValue: Any? = item.value(forKey: "id")
+                        if nameValue == nil
                         {
                             listNames.append("a")
                         }
                         else
                         {
-                        listNames.append("\(value!)")
+                            listNames.append("\(nameValue!)")
                         }
-                        print(item.value(forKey: "id"))
+                    //}
+                    //else
+                    //{
+                    if IdValue == nil
+                    {
+                        ids.append("no")
                     }
-                }
+                    else
+                    {
+                        ids.append("\(IdValue!)")
+                    }
+                    //}
+                //}
             }
            self.listName.reloadData()
+        }catch{
+            print("Unable to retrieve data")
+        }
+        do
+        {
+            let entities = try appDelegate.managedObjectContext?.fetch(requestItems)
+            for item in entities!
+            {
+                //for key in item.entity.attributesByName.keys
+               // {
+                    if ids.contains("\(item.value(forKey: "id")!)")
+                    {
+                            
+                            let place = "\(item.value(forKey: "place")!)"
+                                
+                            if place == ""
+                            {
+                                places.append("No Store Selected")
+                            }
+                            else
+                            {
+                                places.append(place)
+                            }
+                    //}
+                }
+            }
+            self.listName.reloadData()
         }catch{
             print("Unable to retrieve data")
         }
@@ -152,7 +197,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBAction func onClickItem(sender : UIButton)
     {
         let listItemsViewController = self.storyboard?.instantiateViewController(withIdentifier: "ListItemsViewController") as! ListItemsViewController
-        listItemsViewController.name = sender.currentTitle!
+        let name = (sender.currentTitle)?.components(separatedBy: ".")
+        let names = name![1].components(separatedBy: "(")
+        let itemName = names[0].trimmingCharacters(in: .whitespacesAndNewlines)
+        let itemID = name![0].trimmingCharacters(in: .whitespacesAndNewlines)
+        listItemsViewController.name = itemName
+        listItemsViewController.itemId = Int(itemID)
         listItemsViewController.flag = 1
         self.navigationController?.pushViewController(listItemsViewController, animated: true)
     }
