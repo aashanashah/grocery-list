@@ -142,7 +142,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     }
     func getMapBySource(_ locationMap:MKMapView?, address:String?, title: String?, subtitle: String?)
     {
-        SVProgressHUD.show()
+        
+        DispatchQueue.main.async
+            {
+                SVProgressHUD.show()}
         let geocoder = CLGeocoder()
         geocoder.geocodeAddressString(address!, completionHandler: {(placemarks, error) -> Void in
             if let validPlacemark = placemarks?[0]{

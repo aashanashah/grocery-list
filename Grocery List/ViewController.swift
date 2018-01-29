@@ -23,6 +23,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     var ids : [String]!
     var locationManager : CLLocationManager = CLLocationManager()
     var delete = 0
+    let btn1 = UIButton(type: .custom)
     
 
     override func viewDidLoad()
@@ -44,7 +45,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         places = [String]()
         ids = [String]()
         retrievedata()
-        let btn1 = UIButton(type: .custom)
         btn1.titleLabel?.font =  UIFont(name: "American Typewriter", size: 18)
         btn1.backgroundColor = .clear
         btn1.setTitle("Edit", for: .normal)
@@ -204,6 +204,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         listItemsViewController.name = itemName
         listItemsViewController.itemId = Int(itemID)
         listItemsViewController.flag = 1
+        btn1.setTitle("Edit", for: .normal)
+        delete = 0
         self.navigationController?.pushViewController(listItemsViewController, animated: true)
     }
     func deleteData(id : Int)

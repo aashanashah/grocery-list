@@ -13,7 +13,8 @@ import CoreLocation
 import UserNotifications
 
 
-class ListItemsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, CLLocationManagerDelegate  {
+class ListItemsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, CLLocationManagerDelegate
+{
     @IBOutlet var locationButton : UIButton!
     @IBOutlet var updateList: UIButton!
     @IBOutlet var listTable : UITableView!
@@ -56,7 +57,8 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
         // Do any additional setup after loading the view.
     }
     
-    override func didReceiveMemoryWarning() {
+    override func didReceiveMemoryWarning()
+    {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
@@ -273,6 +275,7 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
         let cell:ListTableViewCell = self.listTable.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! ListTableViewCell
         cell.listText.addTarget(self, action: #selector(UITextFieldDelegate.textFieldDidEndEditing(_:)), for: UIControlEvents.editingDidEnd)
         cell.count.addTarget(self, action: #selector(UITextFieldDelegate.textFieldDidEndEditing(_:)), for: UIControlEvents.editingDidEnd)
+        listTable.reloadData()
         var i=0
         while(i<listArray.count)
         {
@@ -314,6 +317,7 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
             countArr.remove(at: (indexPath?.row)!)
         }
         let cell = listTable.cellForRow(at:indexPath!) as! ListTableViewCell
+        cell.stepper.value = 0.0
         cell.count.resignFirstResponder()
         cell.listText.resignFirstResponder()
         listTable.deleteRows(at: [indexPath!], with: UITableViewRowAnimation.automatic)
@@ -355,7 +359,7 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
         {
             return 50
         }
-        return 100.0
+        return 104.0
     }
     @IBAction func clickAdd(sender : UIButton)
     {
@@ -370,7 +374,13 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
     {
         var i=0
         listTable.endEditing(true)
-        if(listArray.contains("") || countArr.contains("0") || countArr.contains(""))
+        if addItems.isHidden == false
+        {
+            let alert = UIAlertController(title: "Grocery List", message: "Enter atleast one valid item and quantity", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+        else if(listArray.contains("") || countArr.contains("0") || countArr.contains(""))
         {
             alert()
         }

@@ -5,6 +5,7 @@
 //  Copyright (c) 2011-2017 Sam Vermette and contributors. All rights reserved.
 //
 
+
 #if !__has_feature(objc_arc)
 #error SVProgressHUD is ARC only. Either turn on ARC for the project or use -fobjc-arc flag
 #endif
@@ -67,11 +68,13 @@ static const CGFloat SVProgressHUDLabelSpacing = 8.0f;
 }
 
 + (SVProgressHUD*)sharedView {
-    static dispatch_once_t once;
+    //static dispatch_once_t once;
     
     static SVProgressHUD *sharedView;
 #if !defined(SV_APP_EXTENSIONS)
-    dispatch_once(&once, ^{ sharedView = [[self alloc] initWithFrame:[[[UIApplication sharedApplication] delegate] window].bounds]; });
+    
+    dispatch_async(dispatch_get_main_queue(), ^{ sharedView = [[self alloc] initWithFrame:[[[UIApplication sharedApplication] delegate] window].bounds]; });
+    
 #else
     dispatch_once(&once, ^{ sharedView = [[self alloc] initWithFrame:[[UIScreen mainScreen] bounds]]; });
 #endif
