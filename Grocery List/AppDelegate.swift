@@ -27,6 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     let requestIdentifier = "SampleRequest"
     let center = UNUserNotificationCenter.current()
     var name = ""
+    var itemID : Int!
     
     //MARK:    Application Life Cycle
     
@@ -43,6 +44,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         GMSPlacesClient.provideAPIKey("AIzaSyBSdPfzt7bGUu2u5JaH3xig-DzhnXSGGWU")
         locationManager.delegate = self
         locationManager.requestAlwaysAuthorization()
+        IQKeyboardManager.shared.enable = true
         center.requestAuthorization(options: options) {
             (granted, error) in
             if !granted {
@@ -87,16 +89,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         let category = UNNotificationCategory(identifier: "Actions",
                                               actions: [snoozeAction,deleteAction],
                                               intentIdentifiers: [], options: [])
-        
+        let identifier = region.identifier
+        let data = identifier.split(separator: "@")
+        name = "\(data[0])"
+        itemID = Int(data[1])
         let center = UNUserNotificationCenter.current()
         center.delegate = self
         center.setNotificationCategories([category])
         let content = UNMutableNotificationContent()
         content.title = "Grocery List"
-        content.body = "Your list \(region.identifier) is ready. Enjoy Shopping!"
+        content.body = "Your list \(name) is ready. Enjoy Shopping!"
         content.sound = UNNotificationSound.default()
         content.categoryIdentifier = "Actions"
-        name = region.identifier
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1.0,
                                                         repeats: false)
         
@@ -152,13 +156,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                 let navigationController = self.window?.rootViewController as! UINavigationController
                 destinationViewController.name = name
                 destinationViewController.flag = 1
+                destinationViewController.itemId = itemID
                 navigationController.pushViewController(destinationViewController, animated: true)
                 print("Default")
             case "Show":
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
 
                 let destinationViewController = storyboard.instantiateViewController(withIdentifier: "ListItemsViewController") as! ListItemsViewController
-
                 let navigationController = self.window?.rootViewController as! UINavigationController
                 destinationViewController.name = name
                 destinationViewController.flag = 1

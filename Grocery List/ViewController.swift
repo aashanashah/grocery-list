@@ -255,7 +255,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                             let lat = Double(arr[0])
                             let long = Double(arr[1])
                             let geo = CLLocationCoordinate2DMake(lat!, long!);
-                            let region = CLCircularRegion(center: geo , radius: 200, identifier: arr[2])
+                            let region = CLCircularRegion(center: geo , radius: 200, identifier: arr[2]+"@"+"\(id)")
                             locationManager.stopMonitoring(for: region)
                         }
                         context?.delete(item)

@@ -295,6 +295,8 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
             let indx = IndexPath(row:listArray.count-1, section: 0)
             listTable.insertRows(at: [indx], with: .automatic)
             listTable.endUpdates()
+            let cell2 = listTable.cellForRow(at:indx) as! ListTableViewCell
+            cell2.stepper.value = 0
         }
     }
     @objc func ondelRow(sender: UIButton)
@@ -446,7 +448,7 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
                         let lat = UserDefaults.standard.double(forKey: "Latitude")
                         let long = UserDefaults.standard.double(forKey: "Longitude")
                         let geo = CLLocationCoordinate2DMake(lat, long);
-                        let region = CLCircularRegion(center:geo , radius: 200, identifier: listName.text!)
+                        let region = CLCircularRegion(center:geo , radius: 200, identifier: listName.text!+"@"+"\(count+1)")
                         locationManager.startMonitoring(for: region)
                         item.setValue("\(lat)+\(long)+\(region.identifier)", forKey: "geotification")
                     }
@@ -522,13 +524,13 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
                                         let lat = Double(arr[0])
                                         let long = Double(arr[1])
                                         let geo = CLLocationCoordinate2DMake(lat!, long!);
-                                        let region = CLCircularRegion(center: geo , radius: 200, identifier: arr[2])
+                                        let region = CLCircularRegion(center: geo , radius: 200, identifier: arr[2]+"@"+"\(itemId)")
                                         locationManager.stopMonitoring(for: region)
                                     }
                                     let lat = UserDefaults.standard.double(forKey: "Latitude")
                                     let long = UserDefaults.standard.double(forKey: "Longitude")
                                     let geo = CLLocationCoordinate2DMake(lat, long);
-                                    let region = CLCircularRegion(center:geo , radius: 200, identifier: listName.text!)
+                                    let region = CLCircularRegion(center:geo , radius: 200, identifier: listName.text!+"@"+"\(itemId)")
                                     locationManager.startMonitoring(for: region)
                                     item.setValue("\(lat)+\(long)+\(region.identifier)", forKey: "geotification")
                                 }
@@ -579,8 +581,8 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     func getList()
     {
-        listArray = []
-        countArr = []
+        listArray = [String]()
+        countArr = [String]()
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         
         let requestItems:NSFetchRequest<Items>

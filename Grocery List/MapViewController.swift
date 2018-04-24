@@ -144,8 +144,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     {
         
         DispatchQueue.main.async
-            {
-                SVProgressHUD.show()}
+        {
+                SVProgressHUD.show()
+                
+        }
         let geocoder = CLGeocoder()
         geocoder.geocodeAddressString(address!, completionHandler: {(placemarks, error) -> Void in
             if let validPlacemark = placemarks?[0]{
@@ -252,6 +254,11 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     @IBAction func saveAddress(sender : UIButton)
     {
         returnData()
+        DispatchQueue.main.async
+        {
+                SVProgressHUD.dismiss()
+                
+        }
         self.navigationController?.popViewController(animated: true)
     }
 }
