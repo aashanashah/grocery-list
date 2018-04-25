@@ -98,6 +98,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @objc func onEditRow(sender:UIButton)
     {
         listNames.remove(at: sender.tag)
+        places.remove(at: sender.tag)
         deleteData(id : sender.tag+1)
         listName.reloadData()
     }
@@ -111,6 +112,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         {
             // handle delete (by removing the data from your array and updating the tableview)
             listNames.remove(at: indexPath.row)
+            places.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.automatic)
             deleteData(id : indexPath.row+1)
         }
@@ -255,7 +257,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                             let lat = Double(arr[0])
                             let long = Double(arr[1])
                             let geo = CLLocationCoordinate2DMake(lat!, long!);
-                            let region = CLCircularRegion(center: geo , radius: 200, identifier: arr[2]+"@"+"\(id)")
+                            let region = CLCircularRegion(center: geo , radius: 200, identifier: arr[2])
                             locationManager.stopMonitoring(for: region)
                         }
                         context?.delete(item)
@@ -277,6 +279,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func updateID()
     {
         var newID = 1
+        var geoid = 1
+        ids = [String]()
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let requestList:NSFetchRequest<List>
         requestList = NSFetchRequest<List>(entityName: "List")
@@ -293,7 +297,27 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     if key == "id"
                     {
                         item.id = Int16(newID)
+                        ids.append("\(item.id)")
+                        print(newID)
                         newID += 1
+                    }
+                    if key == "geotification"
+                    {
+                        if let geotification = item.geotification
+                        {
+                            let arr = geotification.split(separator: "+").map(String.init)
+                            let lat = Double(arr[0])
+                            let long = Double(arr[1])
+                            let geo = CLLocationCoordinate2DMake(lat!, long!);
+                            let region = CLCircularRegion(center: geo , radius: 200, identifier: arr[2])
+                            locationManager.stopMonitoring(for: region)
+                            let geonew = arr[2].split(separator: "@")
+                            let newregion = CLCircularRegion(center:geo , radius: 200, identifier: "\(geonew[0])@\(geoid)")
+                            locationManager.startMonitoring(for: newregion)
+                            item.setValue("\(lat)+\(long)+\(region.identifier)", forKey: "geotification")
+                        }
+                        print(geoid)
+                        geoid += 1
                     }
                 }
             }

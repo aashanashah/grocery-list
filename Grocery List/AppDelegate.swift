@@ -166,6 +166,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                 let navigationController = self.window?.rootViewController as! UINavigationController
                 destinationViewController.name = name
                 destinationViewController.flag = 1
+                destinationViewController.itemId = itemID
                 navigationController.pushViewController(destinationViewController, animated: true)
                 print("Show")
             case "Delete":

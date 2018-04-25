@@ -199,24 +199,23 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
        
-            let cell:ListTableViewCell = self.listTable.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! ListTableViewCell
-            let cellI:ItemTableCell = self.itemTable.dequeueReusableCell(withIdentifier: cellReuseId) as! ItemTableCell
-        
-                cell.listText.text = listArray[indexPath.row]
-                cell.count.text = countArr[indexPath.row]
-                cellI.itemName.text = listArray[indexPath.row]
-                cellI.quantity.text = countArr[indexPath.row]
-                cellI.srno.text = "\(indexPath.row+1)."
-                cell.addButton.addTarget(self, action:#selector(onaddRow(sender:)), for: .touchUpInside)
-                cell.delButton.addTarget(self, action:#selector(ondelRow(sender:)), for: .touchUpInside)
-                cell.listText.addTarget(self, action: #selector(UITextFieldDelegate.textFieldDidEndEditing(_:)), for: UIControlEvents.editingDidEnd)
-                cell.count.addTarget(self, action: #selector(UITextFieldDelegate.textFieldDidEndEditing(_:)), for: UIControlEvents.editingDidEnd)
-                cell.stepper.addTarget(self, action: #selector(stepperChange(_:)), for: .valueChanged)
+        let cell:ListTableViewCell = self.listTable.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! ListTableViewCell
+        let cellI:ItemTableCell = self.itemTable.dequeueReusableCell(withIdentifier: cellReuseId) as! ItemTableCell
+    
+            cell.listText.text = listArray[indexPath.row]
+            cell.count.text = countArr[indexPath.row]
+            cellI.itemName.text = listArray[indexPath.row]
+            cellI.quantity.text = countArr[indexPath.row]
+            cellI.srno.text = "\(indexPath.row+1)."
+            cell.addButton.addTarget(self, action:#selector(onaddRow(sender:)), for: .touchUpInside)
+            cell.delButton.addTarget(self, action:#selector(ondelRow(sender:)), for: .touchUpInside)
+            cell.listText.addTarget(self, action: #selector(UITextFieldDelegate.textFieldDidEndEditing(_:)), for: UIControlEvents.editingDidEnd)
+            cell.count.addTarget(self, action: #selector(UITextFieldDelegate.textFieldDidEndEditing(_:)), for: UIControlEvents.editingDidEnd)
+            cell.stepper.addTarget(self, action: #selector(stepperChange(_:)), for: .valueChanged)
         if tableView == listTable
         {
             return cell
         }
-        
         cell.preservesSuperviewLayoutMargins = false
         cell.separatorInset = UIEdgeInsets.zero
         cell.layoutMargins = UIEdgeInsets.zero
@@ -295,8 +294,8 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
             let indx = IndexPath(row:listArray.count-1, section: 0)
             listTable.insertRows(at: [indx], with: .automatic)
             listTable.endUpdates()
-            let cell2 = listTable.cellForRow(at:indx) as! ListTableViewCell
-            cell2.stepper.value = 0
+            let cell2 = listTable.cellForRow(at:indx) as? ListTableViewCell
+            cell2?.stepper.value = 0
         }
     }
     @objc func ondelRow(sender: UIButton)
@@ -448,7 +447,7 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
                         let lat = UserDefaults.standard.double(forKey: "Latitude")
                         let long = UserDefaults.standard.double(forKey: "Longitude")
                         let geo = CLLocationCoordinate2DMake(lat, long);
-                        let region = CLCircularRegion(center:geo , radius: 200, identifier: listName.text!+"@"+"\(count+1)")
+                        let region = CLCircularRegion(center:geo , radius: 200, identifier: listName.text!+"@\(count+1)")
                         locationManager.startMonitoring(for: region)
                         item.setValue("\(lat)+\(long)+\(region.identifier)", forKey: "geotification")
                     }
@@ -524,13 +523,13 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
                                         let lat = Double(arr[0])
                                         let long = Double(arr[1])
                                         let geo = CLLocationCoordinate2DMake(lat!, long!);
-                                        let region = CLCircularRegion(center: geo , radius: 200, identifier: arr[2]+"@"+"\(itemId)")
+                                        let region = CLCircularRegion(center: geo , radius: 200, identifier: arr[2])
                                         locationManager.stopMonitoring(for: region)
                                     }
                                     let lat = UserDefaults.standard.double(forKey: "Latitude")
                                     let long = UserDefaults.standard.double(forKey: "Longitude")
                                     let geo = CLLocationCoordinate2DMake(lat, long);
-                                    let region = CLCircularRegion(center:geo , radius: 200, identifier: listName.text!+"@"+"\(itemId)")
+                                    let region = CLCircularRegion(center:geo , radius: 200, identifier: listName.text!+"@\(itemId)")
                                     locationManager.startMonitoring(for: region)
                                     item.setValue("\(lat)+\(long)+\(region.identifier)", forKey: "geotification")
                                 }

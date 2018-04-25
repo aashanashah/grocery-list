@@ -11,7 +11,6 @@ import MapKit
 import CoreLocation
 import GooglePlaces
 import GoogleMaps
-import SVProgressHUD
 
 
 class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate, CLLocationManagerDelegate, GMSAutocompleteViewControllerDelegate {
@@ -142,12 +141,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     }
     func getMapBySource(_ locationMap:MKMapView?, address:String?, title: String?, subtitle: String?)
     {
-        
-        DispatchQueue.main.async
-        {
-                SVProgressHUD.show()
-                
-        }
         let geocoder = CLGeocoder()
         geocoder.geocodeAddressString(address!, completionHandler: {(placemarks, error) -> Void in
             if let validPlacemark = placemarks?[0]{
@@ -179,10 +172,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         if let Location = searchPlacemark.location
         {
             searchAnnotation.coordinate = Location.coordinate
-        }
-        DispatchQueue.global(qos: .userInitiated).async
-        {
-                SVProgressHUD.dismiss()
         }
         self.mapView.addAnnotation(searchAnnotation)
     }
@@ -254,11 +243,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     @IBAction func saveAddress(sender : UIButton)
     {
         returnData()
-        DispatchQueue.main.async
-        {
-                SVProgressHUD.dismiss()
-                
-        }
         self.navigationController?.popViewController(animated: true)
     }
 }

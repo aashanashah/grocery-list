@@ -9,20 +9,23 @@ PODS:
     - GooglePlaces (= 2.4.0)
   - GooglePlaces (2.4.0):
     - GoogleMaps/Base (= 2.4.0)
-  - SVProgressHUD (2.2.1)
 
 DEPENDENCIES:
   - GoogleMaps
   - GooglePlacePicker
   - GooglePlaces
-  - SVProgressHUD
+
+SPEC REPOS:
+  https://github.com/CocoaPods/Specs.git:
+    - GoogleMaps
+    - GooglePlacePicker
+    - GooglePlaces
 
 SPEC CHECKSUMS:
   GoogleMaps: 8436ab5d1c25e36915b2f7416d0c8e3fa2e76c61
   GooglePlacePicker: 755f10343d71280c7b016823e73fbae9625dfa8a
   GooglePlaces: aafe5990fa7951e98e078761bbdaaf236d7e0c65
-  SVProgressHUD: db27c54e6e18bc903341661fc9feb55e04905cc4
 
-PODFILE CHECKSUM: cbf0801913113bf2e804110619b23a8a3a755535
+PODFILE CHECKSUM: 881d1fb5c119142d50d774f08d93e71e872ef124
 
-COCOAPODS: 1.2.0
+COCOAPODS: 1.5.0
