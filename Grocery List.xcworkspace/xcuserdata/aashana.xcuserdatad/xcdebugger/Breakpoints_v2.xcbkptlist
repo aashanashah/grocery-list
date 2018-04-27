@@ -9,13 +9,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Grocery List/AppDelegate.swift"
-            timestampString = "546291711.533309"
+            filePath = "Grocery List/MapViewController.swift"
+            timestampString = "546410814.955261"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "94"
-            endingLineNumber = "94"
-            landmarkName = "handleEvent(forRegion:)"
+            startingLineNumber = "233"
+            endingLineNumber = "233"
+            landmarkName = "resetData()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

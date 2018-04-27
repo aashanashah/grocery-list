@@ -14,7 +14,7 @@ import CoreLocation
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate {
     @IBOutlet var addList : UIButton!
-    
+    @IBOutlet var arrowNav : UIImageView!
     @IBOutlet var listName : UITableView!
     
     let cellReuseIdentifier = "ListNameTableViewCell"
@@ -195,6 +195,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }catch{
             print("Unable to retrieve data")
         }
+        if listNames.count == 0
+        {
+            arrowNav.isHidden = false
+            listName.isHidden = true
+        }
+        else
+        {
+            arrowNav.isHidden = true
+            listName.isHidden = false
+        }
     }
     @IBAction func onClickItem(sender : UIButton)
     {
@@ -254,9 +264,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                         {
                             let location = "\(loc)"
                             let arr = location.split(separator: "+").map(String.init)
-                            let lat = Double(arr[0])
-                            let long = Double(arr[1])
-                            let geo = CLLocationCoordinate2DMake(lat!, long!);
+                            let lat = Double(arr[0])!
+                            let long = Double(arr[1])!
+                            let geo = CLLocationCoordinate2DMake(lat, long);
                             let region = CLCircularRegion(center: geo , radius: 200, identifier: arr[2])
                             locationManager.stopMonitoring(for: region)
                         }
@@ -306,9 +316,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                         if let geotification = item.geotification
                         {
                             let arr = geotification.split(separator: "+").map(String.init)
-                            let lat = Double(arr[0])
-                            let long = Double(arr[1])
-                            let geo = CLLocationCoordinate2DMake(lat!, long!);
+                            let lat = Double(arr[0])!
+                            let long = Double(arr[1])!
+                            let geo = CLLocationCoordinate2DMake(lat, long);
                             let region = CLCircularRegion(center: geo , radius: 200, identifier: arr[2])
                             locationManager.stopMonitoring(for: region)
                             let geonew = arr[2].split(separator: "@")

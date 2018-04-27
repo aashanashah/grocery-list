@@ -94,9 +94,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         let span = MKCoordinateSpanMake(0.01, 0.01)
         let region = MKCoordinateRegion(center: currLocation, span: span)
         mapView.setRegion(region, animated: true)
-        currannotation.coordinate = currLocation
-        currannotation.title = "Current location"
-        mapView.addAnnotation(currannotation)
+        name = "Current Location"
+        locationManager.stopUpdatingLocation()
+        self.setAnnotation(location: currLocation)
     }
     @IBAction func autocompleteClicked(_ sender: UIButton) {
         
@@ -160,8 +160,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     }
     func setAnnotation(location:CLLocationCoordinate2D)
     {
-        Thread.sleep(forTimeInterval: 1.0)
+        //Thread.sleep(forTimeInterval: 1.0)
         let allAnnotations = self.mapView.annotations
+        print(location)
         self.mapView.removeAnnotations(allAnnotations)
         let searchPlacemark = MKPlacemark(coordinate: location, addressDictionary: nil)
         let searchAnnotation = MKPointAnnotation()
