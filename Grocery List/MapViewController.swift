@@ -24,7 +24,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     var searchLoc = CLLocationCoordinate2D()
     var address : String!
     var coordinate : CLLocationCoordinate2D!
-    var name : String!
+    var name = "Cuurent Location"
     var flag = 0
 
     override func viewDidLoad() {
@@ -91,11 +91,13 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation])
     {
         currLocation = manager.location!.coordinate
+        if currLocation.latitude != 0.0 && currLocation.longitude != 0.0
+        {
+            locationManager.stopUpdatingLocation()
+        }
         let span = MKCoordinateSpanMake(0.01, 0.01)
         let region = MKCoordinateRegion(center: currLocation, span: span)
         mapView.setRegion(region, animated: true)
-        name = "Current Location"
-        locationManager.stopUpdatingLocation()
         self.setAnnotation(location: currLocation)
     }
     @IBAction func autocompleteClicked(_ sender: UIButton) {
@@ -186,7 +188,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
                 if (placeMark?.name) != nil
                 {
                     self.address.append((placeMark?.name!)! + ",")
-                    self.name = placeMark?.name
+                    self.name = (placeMark?.name)!
                 }
                 if (placeMark?.locality) != nil
                 {

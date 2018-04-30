@@ -176,7 +176,7 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
         else
         {
             mapViewController.flag = 1
-            mapViewController.name = locationButton.currentTitle
+            mapViewController.name = locationButton.currentTitle!
             if coordinate != nil
             {
                 mapViewController.coordinate = coordinate

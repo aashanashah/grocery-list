@@ -284,6 +284,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }catch{
             print("Unable to retrieve data")
         }
+        if listNames.count == 0
+        {
+            arrowNav.isHidden = false
+            listName.isHidden = true
+        }
+        else
+        {
+            arrowNav.isHidden = true
+            listName.isHidden = false
+        }
         updateID()
     }
     func updateID()
