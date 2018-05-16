@@ -181,7 +181,7 @@
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="add" translatesAutoresizingMaskIntoConstraints="NO" id="3jV-ZG-rLn">
-                                <rect key="frame" x="130" y="317" width="20" height="20"/>
+                                <rect key="frame" x="50" y="317" width="20" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="20" id="QSs-gd-8sr"/>
                                     <constraint firstAttribute="height" constant="20" id="tqM-n0-tQe"/>
@@ -364,7 +364,7 @@
                             <constraint firstItem="nUD-J1-dgP" firstAttribute="trailing" secondItem="lu2-4t-BaO" secondAttribute="trailing" id="XLR-MM-6aZ"/>
                             <constraint firstItem="d8Q-yC-l3Z" firstAttribute="top" secondItem="vJp-jD-Vz2" secondAttribute="bottom" constant="20" id="Xno-C4-aYh"/>
                             <constraint firstItem="nW2-ke-5mS" firstAttribute="trailing" secondItem="vJp-jD-Vz2" secondAttribute="trailing" id="YM7-vh-dvd"/>
-                            <constraint firstItem="3jV-ZG-rLn" firstAttribute="leading" secondItem="nW2-ke-5mS" secondAttribute="leading" constant="130" id="YW4-oY-POw"/>
+                            <constraint firstItem="3jV-ZG-rLn" firstAttribute="leading" secondItem="nW2-ke-5mS" secondAttribute="leading" constant="50" id="YW4-oY-POw"/>
                             <constraint firstItem="lu2-4t-BaO" firstAttribute="centerY" secondItem="7eY-BZ-pbB" secondAttribute="centerY" id="exK-m3-CdD"/>
                             <constraint firstItem="7eY-BZ-pbB" firstAttribute="leading" secondItem="nW2-ke-5mS" secondAttribute="leading" constant="30" id="fMR-lR-Bol"/>
                             <constraint firstItem="mqe-s0-vR7" firstAttribute="height" secondItem="ao7-7m-DSB" secondAttribute="height" id="goG-wX-UpU"/>
@@ -434,12 +434,25 @@
                                     <action selector="saveAddressWithSender:" destination="y2R-Aw-ulh" eventType="touchUpInside" id="dcl-QY-ZlS"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tOp-UT-PAr">
+                                <rect key="frame" x="325" y="557" width="30" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="30" id="0hF-2c-3HK"/>
+                                    <constraint firstAttribute="height" constant="30" id="YaH-Yf-s0d"/>
+                                </constraints>
+                                <state key="normal" backgroundImage="current location"/>
+                                <connections>
+                                    <action selector="currentLocationWithSender:" destination="y2R-Aw-ulh" eventType="touchUpInside" id="0td-FP-StE"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="yxI-Vt-bvr" firstAttribute="width" secondItem="jJW-tM-2ZC" secondAttribute="width" id="6gk-pl-Vik"/>
                             <constraint firstItem="yxI-Vt-bvr" firstAttribute="centerY" secondItem="V6l-Ri-rJz" secondAttribute="centerY" id="Hob-wN-bMp"/>
                             <constraint firstItem="V6l-Ri-rJz" firstAttribute="bottom" secondItem="ZMM-Qt-l4n" secondAttribute="bottom" constant="20" id="Nvt-gQ-cUp"/>
+                            <constraint firstItem="ZMM-Qt-l4n" firstAttribute="top" secondItem="tOp-UT-PAr" secondAttribute="bottom" constant="30" id="O3U-BE-uaN"/>
+                            <constraint firstItem="V6l-Ri-rJz" firstAttribute="trailing" secondItem="tOp-UT-PAr" secondAttribute="trailing" constant="20" id="QCU-uh-yYh"/>
                             <constraint firstItem="V6l-Ri-rJz" firstAttribute="trailing" secondItem="Bg3-WQ-2DU" secondAttribute="trailing" constant="30" id="Qr5-6C-SlZ"/>
                             <constraint firstItem="yxI-Vt-bvr" firstAttribute="centerX" secondItem="V6l-Ri-rJz" secondAttribute="centerX" id="Sf4-oS-Teq"/>
                             <constraint firstItem="Bg3-WQ-2DU" firstAttribute="leading" secondItem="V6l-Ri-rJz" secondAttribute="leading" constant="30" id="Ws7-uf-IDa"/>
@@ -463,6 +476,7 @@
     <resources>
         <image name="add" width="30" height="30"/>
         <image name="arrow" width="320" height="640"/>
+        <image name="current location" width="30" height="30"/>
         <image name="minus" width="30" height="30"/>
     </resources>
 </document>

@@ -24,8 +24,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     var searchLoc = CLLocationCoordinate2D()
     var address : String!
     var coordinate : CLLocationCoordinate2D!
-    var name = "Cuurent Location"
+    var name = "Current Location"
     var flag = 0
+    var currLocFlag = 1
+    var currRegion : CLCircularRegion!
 
     override func viewDidLoad() {
 
@@ -37,7 +39,22 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         {
             saveAdd.setTitle(name, for: .normal)
             setAnnotation(location: coordinate)
+            self.locationManager = CLLocationManager()
+            address = ""
+            // For use in foreground
+            
+            self.locationManager.requestAlwaysAuthorization()
+            
+            if CLLocationManager.locationServicesEnabled()
+            {
+                locationManager.delegate = self as CLLocationManagerDelegate
+                locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+                locationManager.startUpdatingLocation()
+            }
             let gestureRecognizer = UITapGestureRecognizer(target: self, action:#selector(handleTap(gestureReconizer:)))
+            currLocFlag = 0
+            mapView.delegate = self
+            mapView.mapType = MKMapType.standard
             mapView.addGestureRecognizer(gestureRecognizer)
         }
         else
@@ -57,7 +74,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
             }
             mapView.delegate = self
             mapView.mapType = MKMapType.standard
-            
             let gestureRecognizer = UITapGestureRecognizer(target: self, action:#selector(handleTap(gestureReconizer:)))
             mapView.addGestureRecognizer(gestureRecognizer)
         }
@@ -95,10 +111,13 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         {
             locationManager.stopUpdatingLocation()
         }
-        let span = MKCoordinateSpanMake(0.01, 0.01)
-        let region = MKCoordinateRegion(center: currLocation, span: span)
-        mapView.setRegion(region, animated: true)
-        self.setAnnotation(location: currLocation)
+        if flag == 0
+        {
+            let span = MKCoordinateSpanMake(0.01, 0.01)
+            let region = MKCoordinateRegion(center: currLocation, span: span)
+            mapView.setRegion(region, animated: true)
+            self.setAnnotation(location: currLocation)
+        }
     }
     @IBAction func autocompleteClicked(_ sender: UIButton) {
         
@@ -113,6 +132,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         saveAdd.setTitle(name, for: .normal)
         let allAnnotations = self.mapView.annotations
         self.mapView.removeAnnotations(allAnnotations)
+        currLocFlag = 0
         getAddress()
         dismiss(animated: true, completion: nil)
     }
@@ -219,6 +239,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         
         alert.addAction(UIAlertAction(title: "No", style: UIAlertActionStyle.default, handler: {(action: UIAlertAction!) in self.resetData()}))
         self.present(alert, animated: true, completion: nil)
+        currLocFlag = 0
     }
     func returnData()
     {
@@ -242,10 +263,25 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         UserDefaults.standard.set(nil, forKey: "Latitude")
         UserDefaults.standard.set(nil, forKey: "Longitude")
         saveAdd.setTitle("Search Places", for: .normal)
+        currLocFlag = 1
+    }
+    @IBAction func currentLocation(sender : UIButton)
+    {
+        resetData()
     }
     @IBAction func saveAddress(sender : UIButton)
     {
-        returnData()
+        if currLocFlag == 1
+        {
+            saveAdd.setTitle("Current Location", for: .normal)
+            UserDefaults.standard.set("Current Location", forKey: "Place")
+            UserDefaults.standard.set(currLocation.latitude, forKey: "Latitude")
+            UserDefaults.standard.set(currLocation.longitude, forKey: "Longitude")
+        }
+        else
+        {
+            returnData()
+        }
         self.navigationController?.popViewController(animated: true)
     }
 }

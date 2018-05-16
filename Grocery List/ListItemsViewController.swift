@@ -529,7 +529,7 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
                                     let lat = UserDefaults.standard.double(forKey: "Latitude")
                                     let long = UserDefaults.standard.double(forKey: "Longitude")
                                     let geo = CLLocationCoordinate2DMake(lat, long);
-                                    let region = CLCircularRegion(center:geo , radius: 200, identifier: listName.text!+"@\(itemId)")
+                                    let region = CLCircularRegion(center:geo , radius: 200, identifier: listName.text!+"@\(itemId!)")
                                     locationManager.startMonitoring(for: region)
                                     item.setValue("\(lat)+\(long)+\(region.identifier)", forKey: "geotification")
                                 }
