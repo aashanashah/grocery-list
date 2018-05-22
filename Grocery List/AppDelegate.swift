@@ -45,6 +45,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         locationManager.delegate = self
         locationManager.requestAlwaysAuthorization()
         IQKeyboardManager.shared.enable = true
+        center.delegate = self
         center.requestAuthorization(options: options) {
             (granted, error) in
             if !granted {
@@ -105,7 +106,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                                                         repeats: false)
         
         
-        let request = UNNotificationRequest(identifier: requestIdentifier,
+        let request = UNNotificationRequest(identifier: requestIdentifier+data[1],
                                             content: content, trigger: trigger)
         center.add(request, withCompletionHandler: { (error) in
             if let error = error {

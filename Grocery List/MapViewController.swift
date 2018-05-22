@@ -27,14 +27,18 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     var name = "Current Location"
     var flag = 0
     var currLocFlag = 1
-    var currRegion : CLCircularRegion!
+    //var currRegion : CLCircularRegion!
 
     override func viewDidLoad() {
-
+        super.viewDidLoad()
         // Do any additional setup after loading the view.
     }
     override func viewWillAppear(_ animated: Bool) {
         self.title = "Choose your location"
+        updateLoc()
+    }
+    func updateLoc()
+    {
         if flag == 1
         {
             saveAdd.setTitle(name, for: .normal)
@@ -51,11 +55,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
                 locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
                 locationManager.startUpdatingLocation()
             }
-            let gestureRecognizer = UITapGestureRecognizer(target: self, action:#selector(handleTap(gestureReconizer:)))
             currLocFlag = 0
             mapView.delegate = self
             mapView.mapType = MKMapType.standard
-            mapView.addGestureRecognizer(gestureRecognizer)
         }
         else
         {
@@ -74,36 +76,13 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
             }
             mapView.delegate = self
             mapView.mapType = MKMapType.standard
-            let gestureRecognizer = UITapGestureRecognizer(target: self, action:#selector(handleTap(gestureReconizer:)))
-            mapView.addGestureRecognizer(gestureRecognizer)
         }
     }
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-
-    @objc func handleTap(gestureReconizer: UILongPressGestureRecognizer) {
-        address = ""
-        mapView.showsUserLocation = true
-        let allAnnotations = self.mapView.annotations
-        self.mapView.removeAnnotations(allAnnotations)
-        let location = gestureReconizer.location(in: mapView)
-        let coordinate = mapView.convert(location,toCoordinateFrom: mapView)
-        //UserDefaults.setValue(coordinate, forKey: "UserCoordinates")
-        self.coordinate = coordinate
-        self.searchLoc = coordinate
-        
-        // Add annotation:
-        let annotation = MKPointAnnotation()
-        annotation.coordinate = coordinate
-        annotation.title = "My location"
-        mapView.addAnnotation(annotation)
-        setSearch(LocCoordinate:coordinate)
-        getAddress(coordinate:coordinate)
-    }
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation])
     {
         currLocation = manager.location!.coordinate
@@ -198,49 +177,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         }
         self.mapView.addAnnotation(searchAnnotation)
     }
-    func getAddress(coordinate:CLLocationCoordinate2D)
-    {
-        let geocoder = CLGeocoder()
-        geocoder.reverseGeocodeLocation(CLLocation(latitude:coordinate.latitude, longitude:coordinate.longitude), completionHandler: {
-            placemarks, error in
-            if error == nil && placemarks?.count != 0 {
-                let placeMark = placemarks!.last
-                if (placeMark?.name) != nil
-                {
-                    self.address.append((placeMark?.name!)! + ",")
-                    self.name = (placeMark?.name)!
-                }
-                if (placeMark?.locality) != nil
-                {
-                    self.address.append((placeMark?.locality!)! + ",")
-                }
-                if (placeMark?.administrativeArea) != nil
-                {
-                    self.address.append((placeMark?.administrativeArea!)! + ",")
-                }
-                if (placeMark?.postalCode) != nil
-                {
-                    self.address.append((placeMark?.postalCode!)! + ",")
-                }
-                if (placeMark?.country) != nil
-                {
-                    self.address.append((placeMark?.country!)! + ",")
-                }
-               
-                self.checkAddress(address: self.address)
-                
-            }
-        })
-    }
-    func checkAddress(address:String)
-    {
-        let alert = UIAlertController(title: "Verify Address", message: "Is this your chosen location?: "+address , preferredStyle: UIAlertControllerStyle.alert)
-        alert.addAction(UIAlertAction(title: "Yes", style: UIAlertActionStyle.default, handler: {(action: UIAlertAction!) in self.returnData()}))
-        
-        alert.addAction(UIAlertAction(title: "No", style: UIAlertActionStyle.default, handler: {(action: UIAlertAction!) in self.resetData()}))
-        self.present(alert, animated: true, completion: nil)
-        currLocFlag = 0
-    }
+    
     func returnData()
     {
         saveAdd.setTitle(name, for: .normal)
@@ -267,6 +204,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     }
     @IBAction func currentLocation(sender : UIButton)
     {
+        updateLoc()
         resetData()
     }
     @IBAction func saveAddress(sender : UIButton)

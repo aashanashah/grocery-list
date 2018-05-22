@@ -434,13 +434,13 @@
                                     <action selector="saveAddressWithSender:" destination="y2R-Aw-ulh" eventType="touchUpInside" id="dcl-QY-ZlS"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tOp-UT-PAr">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tOp-UT-PAr">
                                 <rect key="frame" x="325" y="557" width="30" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="30" id="0hF-2c-3HK"/>
                                     <constraint firstAttribute="height" constant="30" id="YaH-Yf-s0d"/>
                                 </constraints>
-                                <state key="normal" backgroundImage="current location"/>
+                                <state key="normal" image="currentLocation"/>
                                 <connections>
                                     <action selector="currentLocationWithSender:" destination="y2R-Aw-ulh" eventType="touchUpInside" id="0td-FP-StE"/>
                                 </connections>
@@ -476,7 +476,7 @@
     <resources>
         <image name="add" width="30" height="30"/>
         <image name="arrow" width="320" height="640"/>
-        <image name="current location" width="30" height="30"/>
+        <image name="currentLocation" width="60" height="60"/>
         <image name="minus" width="30" height="30"/>
     </resources>
 </document>

@@ -199,11 +199,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         {
             arrowNav.isHidden = false
             listName.isHidden = true
+            btn1.isHidden = false
         }
         else
         {
             arrowNav.isHidden = true
             listName.isHidden = false
+            btn1.isHidden = true
         }
     }
     @IBAction func onClickItem(sender : UIButton)
@@ -288,11 +290,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         {
             arrowNav.isHidden = false
             listName.isHidden = true
+            btn1.isHidden = false
         }
         else
         {
             arrowNav.isHidden = true
             listName.isHidden = false
+            btn1.isHidden = true
         }
         updateID()
     }
