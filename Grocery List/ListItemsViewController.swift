@@ -427,7 +427,8 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
                 let entityItem =  NSEntityDescription.entity(forEntityName: "Items", in: appDelegate.managedObjectContext!)
                 
                 let item = NSManagedObject(entity: entityItem!, insertInto: appDelegate.managedObjectContext)
-                list.setValue(listName.text, forKey: "name")
+                let newName = listName.text?.trimmingCharacters(in: .whitespacesAndNewlines)
+                list.setValue(newName, forKey: "name")
                 list.setValue(count+1, forKey: "id")
                 item.setValue(count+1, forKey: "id")
                 item.setValue(items, forKey: "item")
@@ -474,7 +475,8 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
                     {
                         if key == "id" && item.value(forKey: key) as? Int! == itemId
                         {
-                            item.setValue(listName.text, forKey: "name")
+                            let newName = listName.text?.trimmingCharacters(in: .whitespacesAndNewlines)
+                            item.setValue(newName, forKey: "name")
                         }
                     }
                 }

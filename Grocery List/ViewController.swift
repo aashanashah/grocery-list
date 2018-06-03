@@ -54,14 +54,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         btn1.addTarget(self, action: #selector(edit(sender:)), for: .touchUpInside)
         let item1 = UIBarButtonItem(customView: btn1)
         self.navigationItem.rightBarButtonItem = item1
-        if listNames.isEmpty
-        {
-            btn1.isHidden = true
-        }
-        else
-        {
-            btn1.isHidden = false
-        }
     }
    
     @IBAction func addList(sender : UIButton!)
@@ -199,13 +191,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         {
             arrowNav.isHidden = false
             listName.isHidden = true
-            btn1.isHidden = false
+            btn1.isHidden = true
         }
         else
         {
             arrowNav.isHidden = true
             listName.isHidden = false
-            btn1.isHidden = true
+            btn1.isHidden = false
         }
     }
     @IBAction func onClickItem(sender : UIButton)
@@ -290,13 +282,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         {
             arrowNav.isHidden = false
             listName.isHidden = true
-            btn1.isHidden = false
+            btn1.isHidden = true
         }
         else
         {
             arrowNav.isHidden = true
             listName.isHidden = false
-            btn1.isHidden = true
+            btn1.isHidden = false
         }
         updateID()
     }

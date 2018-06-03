@@ -99,6 +99,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         center.setNotificationCategories([category])
         let content = UNMutableNotificationContent()
         content.title = "Grocery List"
+        content.subtitle = name
         content.body = "Your list \(name) is ready. Enjoy Shopping!"
         content.sound = UNNotificationSound.default()
         content.categoryIdentifier = "Actions"
@@ -106,7 +107,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                                                         repeats: false)
         
         
-        let request = UNNotificationRequest(identifier: requestIdentifier+data[1],
+        let request = UNNotificationRequest(identifier: "\(data[1])",
                                             content: content, trigger: trigger)
         center.add(request, withCompletionHandler: { (error) in
             if let error = error {
@@ -148,6 +149,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         didReceive response: UNNotificationResponse,
         withCompletionHandler completionHandler: @escaping () -> Void) {
         // Determine the user action
+        let name = response.notification.description
         switch response.actionIdentifier {
             case UNNotificationDismissActionIdentifier:
                 print("Dismiss Action")
@@ -155,9 +157,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                 let destinationViewController = storyboard.instantiateViewController(withIdentifier: "ListItemsViewController") as! ListItemsViewController
                 let navigationController = self.window?.rootViewController as! UINavigationController
-                destinationViewController.name = name
+                destinationViewController.name = response.notification.request.content.subtitle
                 destinationViewController.flag = 1
-                destinationViewController.itemId = itemID
+                destinationViewController.itemId = Int(response.notification.request.identifier)
                 navigationController.pushViewController(destinationViewController, animated: true)
                 print("Default")
             case "Show":
@@ -165,9 +167,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
 
                 let destinationViewController = storyboard.instantiateViewController(withIdentifier: "ListItemsViewController") as! ListItemsViewController
                 let navigationController = self.window?.rootViewController as! UINavigationController
-                destinationViewController.name = name
+                destinationViewController.name = response.notification.request.content.subtitle
                 destinationViewController.flag = 1
-                destinationViewController.itemId = itemID
+                destinationViewController.itemId = Int(response.notification.request.identifier)
                 navigationController.pushViewController(destinationViewController, animated: true)
                 print("Show")
             case "Delete":

@@ -23,7 +23,7 @@
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Will you allow this app to always use your location?</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Will you allowe this app to use your location when in use?</string>
+	<string>Will you allow this app to use your location when in use?</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>location</string>
