@@ -142,6 +142,7 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
         self.view.endEditing(true)
         return false
     }
+    
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView?
     {
         let footerView = UIView(frame: CGRect(x:0, y:0, width:Int(tableView.frame.size.width), height:Int(tableView.frame.size.height)))
@@ -360,7 +361,7 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
         {
             return 50
         }
-        return 104.0
+        return 150
     }
     @IBAction func clickAdd(sender : UIButton)
     {

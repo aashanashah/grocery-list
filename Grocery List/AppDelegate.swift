@@ -46,6 +46,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         locationManager.requestAlwaysAuthorization()
         IQKeyboardManager.shared.enable = true
         center.delegate = self
+        center.removeAllDeliveredNotifications()
+        center.removeAllPendingNotificationRequests()
         center.requestAuthorization(options: options) {
             (granted, error) in
             if !granted {
