@@ -718,10 +718,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = TSZ4AB55DJ;
+				DEVELOPMENT_TEAM = FEF2KNS89A;
 				INFOPLIST_FILE = "Grocery List/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.EDF.Grocery-List";
+				PRODUCT_BUNDLE_IDENTIFIER = com.Aashana.Geotify;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_REFLECTION_METADATA_LEVEL = all;
 				SWIFT_VERSION = 4.0;
@@ -735,10 +736,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = TSZ4AB55DJ;
+				DEVELOPMENT_TEAM = FEF2KNS89A;
 				INFOPLIST_FILE = "Grocery List/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.EDF.Grocery-List";
+				PRODUCT_BUNDLE_IDENTIFIER = com.Aashana.Geotify;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_REFLECTION_METADATA_LEVEL = all;
 				SWIFT_VERSION = 4.0;
