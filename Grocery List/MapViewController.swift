@@ -177,7 +177,26 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         }
         self.mapView.addAnnotation(searchAnnotation)
     }
-    
+    func getAddress(coordinate:CLLocationCoordinate2D)
+    {
+            let geocoder = CLGeocoder()
+            geocoder.reverseGeocodeLocation(CLLocation(latitude:coordinate.latitude, longitude:coordinate.longitude), completionHandler: {
+                placemarks, error in
+                if error == nil && placemarks?.count != 0 {
+                    let placeMark = placemarks!.last
+                    if (placeMark?.name) != nil
+                    {
+                        self.address.append((placeMark?.name!)! + ",")
+                        self.name = (placeMark?.name)!
+                    }
+                    self.saveAdd.setTitle("Current Location", for: .normal)
+                    UserDefaults.standard.set(self.address, forKey: "Place")
+                    UserDefaults.standard.set(self.currLocation.latitude, forKey: "Latitude")
+                    UserDefaults.standard.set(self.currLocation.longitude, forKey: "Longitude")
+                    self.navigationController?.popViewController(animated: true)
+               }
+           })
+       }
     func returnData()
     {
         saveAdd.setTitle(name, for: .normal)
@@ -211,16 +230,13 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     {
         if currLocFlag == 1
         {
-            saveAdd.setTitle("Current Location", for: .normal)
-            UserDefaults.standard.set("Current Location", forKey: "Place")
-            UserDefaults.standard.set(currLocation.latitude, forKey: "Latitude")
-            UserDefaults.standard.set(currLocation.longitude, forKey: "Longitude")
+            getAddress(coordinate: currLocation)
         }
         else
         {
             returnData()
+            self.navigationController?.popViewController(animated: true)
         }
-        self.navigationController?.popViewController(animated: true)
     }
 }
     
