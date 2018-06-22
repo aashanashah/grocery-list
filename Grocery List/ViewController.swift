@@ -375,13 +375,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             deleteIndexes.sort(by: >)
             for index in deleteIndexes
             {
-                let indexPath = IndexPath(item:index,section:0)
-                print(index)
-                print(listNames)
-                print(places)
-                listNames.remove(at: indexPath.row)
-                places.remove(at: indexPath.row)
-                deleteData(id : indexPath.row+1)
+                listNames.remove(at: index)
+                places.remove(at: index)
+                deleteData(id : index+1)
                 listName.reloadData()
             }
             sender.title = "Edit"
