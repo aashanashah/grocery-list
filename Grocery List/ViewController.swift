@@ -16,6 +16,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBOutlet var addList : UIButton!
     @IBOutlet var arrowNav : UIImageView!
     @IBOutlet var listName : UITableView!
+    @IBOutlet var editButton : UIBarButtonItem!
+    @IBOutlet var cancelButton : UIBarButtonItem!
     
     let cellReuseIdentifier = "ListNameTableViewCell"
     var listNames : [String]!
@@ -23,8 +25,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     var ids : [String]!
     var locationManager : CLLocationManager = CLLocationManager()
     var delete = 0
-    let btn1 = UIButton(type: .custom)
-    
+    var deleteIndexes : [Int]!
 
     override func viewDidLoad()
     {
@@ -44,16 +45,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         listNames = [String]()
         places = [String]()
         ids = [String]()
+        editButton.title = "Edit"
+        editButton.tintColor = .black
+        listName.isEditing = false
+        cancelButton.tintColor = .black
+        cancelButton.isEnabled = false
+        listName.allowsMultipleSelectionDuringEditing = false
         retrievedata()
-        btn1.titleLabel?.font =  UIFont(name: "American Typewriter", size: 18)
-        btn1.backgroundColor = .clear
-        btn1.setTitle("Edit", for: .normal)
-        btn1.tag = 1
-        btn1.setTitleColor(UIColor.black, for: .normal)
-        btn1.frame = CGRect(x: 0, y: 0, width: 50, height: 25)
-        btn1.addTarget(self, action: #selector(edit(sender:)), for: .touchUpInside)
-        let item1 = UIBarButtonItem(customView: btn1)
-        self.navigationItem.rightBarButtonItem = item1
     }
    
     @IBAction func addList(sender : UIButton!)
@@ -68,31 +66,43 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return listNames.count
     }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
+    }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
         let cell:ListNameTableViewCell = self.listName.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! ListNameTableViewCell
-        cell.name.setTitle("  \(ids[indexPath.row]). \(listNames[indexPath.row]) (\(places[indexPath.row]))", for: .normal)
-        if delete == 1
-        {
-            cell.delete.isHidden = false
-            cell.delete.tag = indexPath.row
-            cell.delete.addTarget(self, action:#selector(onEditRow(sender:)), for: .touchUpInside)
-        }
-        else
-        {
-            cell.delete.isHidden = true
-        }
+        cell.name.text = ("  \(ids[indexPath.row]). \(listNames[indexPath.row])")
+        cell.address.text = places[indexPath.row]
         cell.preservesSuperviewLayoutMargins = false
         cell.separatorInset = UIEdgeInsets.zero
         cell.layoutMargins = UIEdgeInsets.zero
         return cell
     }
-    @objc func onEditRow(sender:UIButton)
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
-        listNames.remove(at: sender.tag)
-        places.remove(at: sender.tag)
-        deleteData(id : sender.tag+1)
-        listName.reloadData()
+        if tableView.isEditing
+        {
+            deleteIndexes.append(indexPath.row)
+            print(deleteIndexes)
+        }
+        else
+        {
+            let listItemsViewController = self.storyboard?.instantiateViewController(withIdentifier: "ListItemsViewController") as! ListItemsViewController
+            listItemsViewController.name = listNames[indexPath.row]
+            listItemsViewController.itemId = Int(ids[indexPath.row])
+            listItemsViewController.flag = 1
+            self.navigationController?.pushViewController(listItemsViewController, animated: true)
+        }
+    }
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        if tableView.isEditing
+        {
+            if let index = deleteIndexes.index(of:indexPath.row) {
+                deleteIndexes.remove(at: index)
+            }
+            print(deleteIndexes)
+        }
     }
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool
     {
@@ -191,28 +201,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         {
             arrowNav.isHidden = false
             listName.isHidden = true
-            btn1.isHidden = true
+            editButton.isEnabled = false
         }
         else
         {
             arrowNav.isHidden = true
             listName.isHidden = false
-            btn1.isHidden = false
+            editButton.isEnabled = true
         }
-    }
-    @IBAction func onClickItem(sender : UIButton)
-    {
-        let listItemsViewController = self.storyboard?.instantiateViewController(withIdentifier: "ListItemsViewController") as! ListItemsViewController
-        let name = (sender.currentTitle)?.components(separatedBy: ".")
-        let names = name![1].components(separatedBy: "(")
-        let itemName = names[0].trimmingCharacters(in: .whitespacesAndNewlines)
-        let itemID = name![0].trimmingCharacters(in: .whitespacesAndNewlines)
-        listItemsViewController.name = itemName
-        listItemsViewController.itemId = Int(itemID)
-        listItemsViewController.flag = 1
-        btn1.setTitle("Edit", for: .normal)
-        delete = 0
-        self.navigationController?.pushViewController(listItemsViewController, animated: true)
     }
     func deleteData(id : Int)
     {
@@ -282,13 +278,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         {
             arrowNav.isHidden = false
             listName.isHidden = true
-            btn1.isHidden = true
+            editButton.isEnabled = false
         }
         else
         {
             arrowNav.isHidden = true
             listName.isHidden = false
-            btn1.isHidden = false
+            editButton.isEnabled = true
         }
         updateID()
     }
@@ -372,19 +368,49 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             print("Unable to retrieve data")
         }
     }
-    @objc func edit(sender : UIButton)
+    @IBAction func edit(sender : UIBarButtonItem)
     {
-        if delete == 1
+        if sender.title != "Edit"
         {
-            sender.setTitle("Edit", for: .normal)
-            delete = 0
+            deleteIndexes.sort(by: >)
+            for index in deleteIndexes
+            {
+                let indexPath = IndexPath(item:index,section:0)
+                print(index)
+                print(listNames)
+                print(places)
+                listNames.remove(at: indexPath.row)
+                places.remove(at: indexPath.row)
+                deleteData(id : indexPath.row+1)
+                listName.reloadData()
+            }
+            sender.title = "Edit"
+            sender.tintColor = .black
+            cancelButton.isEnabled = false
+            listName.isEditing = false
+            listName.allowsMultipleSelectionDuringEditing = false
         }
         else
         {
-            sender.setTitle("Done", for: .normal)
-            delete = 1
+            print(listNames)
+            print(places)
+            sender.title = "Delete"
+            sender.tintColor = .red
+            cancelButton.isEnabled = true
+            deleteIndexes = [Int]()
+            listName.isEditing = true
+            listName.allowsMultipleSelectionDuringEditing = true
         }
         self.listName.reloadData()
+    }
+    @IBAction func cancel(sender: UIBarButtonItem)
+    {
+        editButton.title = "Edit"
+        deleteIndexes = [Int]()
+        editButton.tintColor = .black
+        cancelButton.isEnabled = false
+        listName.isEditing = false
+        listName.allowsMultipleSelectionDuringEditing = false
     }
 }
   

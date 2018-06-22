@@ -1,21 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
-    <customFonts key="customFonts">
-        <array key="AmericanTypewriter.ttc">
-            <string>AmericanTypewriter</string>
-        </array>
-    </customFonts>
     <scenes>
-        <!--View Controller-->
+        <!--Title-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController storyboardIdentifier="ViewController" id="BYZ-38-t0r" customClass="ViewController" customModule="Grocery_List" customModuleProvider="target" sceneMemberID="viewController">
@@ -24,7 +19,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="arrow" translatesAutoresizingMaskIntoConstraints="NO" id="iKX-qs-qPH">
-                                <rect key="frame" x="0.0" y="20" width="375" height="577"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="533"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yb3-9Q-v8Y">
                                 <rect key="frame" x="20" y="597" width="335" height="50"/>
@@ -41,7 +36,7 @@
                                 </connections>
                             </button>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="0A8-aV-W39">
-                                <rect key="frame" x="0.0" y="20" width="375" height="557"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="513"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ListNameTableViewCell" id="hAR-xm-JMh" customClass="ListNameTableViewCell" customModule="Grocery_List" customModuleProvider="target">
@@ -51,37 +46,32 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yr4-5s-unL">
-                                                    <rect key="frame" x="0.0" y="0.0" width="335" height="43.5"/>
-                                                    <fontDescription key="fontDescription" name="AmericanTypewriter" family="American Typewriter" pointSize="20"/>
-                                                    <state key="normal" title="Button">
-                                                        <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
-                                                    <connections>
-                                                        <action selector="onClickItemWithSender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="rnr-Gl-RzE"/>
-                                                    </connections>
-                                                </button>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pDn-7w-uEK">
-                                                    <rect key="frame" x="345" y="6" width="30" height="30"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="30" id="UGc-Dw-gcA"/>
-                                                        <constraint firstAttribute="width" constant="30" id="zNg-CN-jQL"/>
-                                                    </constraints>
-                                                    <state key="normal" image="minus"/>
-                                                </button>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ORp-HZ-F2e">
+                                                    <rect key="frame" x="15" y="10" width="335" height="13.5"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" text="Label" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yp8-gv-6Kq">
+                                                    <rect key="frame" x="25" y="33.5" width="325" height="0.0"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstAttribute="trailing" secondItem="pDn-7w-uEK" secondAttribute="trailing" id="1OL-8h-XIZ"/>
-                                                <constraint firstItem="yr4-5s-unL" firstAttribute="leading" secondItem="lIg-hj-VAT" secondAttribute="leading" id="1rz-2R-YNw"/>
-                                                <constraint firstItem="pDn-7w-uEK" firstAttribute="centerY" secondItem="yr4-5s-unL" secondAttribute="centerY" id="5Wn-V2-xzz"/>
-                                                <constraint firstItem="yr4-5s-unL" firstAttribute="top" secondItem="lIg-hj-VAT" secondAttribute="top" id="Axo-se-91d"/>
-                                                <constraint firstAttribute="bottom" secondItem="yr4-5s-unL" secondAttribute="bottom" id="Rmg-Fk-rda"/>
-                                                <constraint firstAttribute="trailing" secondItem="yr4-5s-unL" secondAttribute="trailing" constant="40" id="wsI-IX-bg2"/>
+                                                <constraint firstItem="ORp-HZ-F2e" firstAttribute="top" secondItem="lIg-hj-VAT" secondAttribute="top" constant="10" id="2S4-oN-w93"/>
+                                                <constraint firstAttribute="trailing" secondItem="ORp-HZ-F2e" secondAttribute="trailing" constant="25" id="2bq-Kw-thx"/>
+                                                <constraint firstItem="Yp8-gv-6Kq" firstAttribute="leading" secondItem="lIg-hj-VAT" secondAttribute="leading" constant="25" id="JPD-e8-wne"/>
+                                                <constraint firstItem="Yp8-gv-6Kq" firstAttribute="top" secondItem="ORp-HZ-F2e" secondAttribute="bottom" constant="10" id="UM0-G0-YWR"/>
+                                                <constraint firstItem="ORp-HZ-F2e" firstAttribute="leading" secondItem="lIg-hj-VAT" secondAttribute="leading" constant="15" id="Ykf-Ht-DhH"/>
+                                                <constraint firstAttribute="bottom" secondItem="Yp8-gv-6Kq" secondAttribute="bottom" constant="10" id="ajY-Rm-tdl"/>
+                                                <constraint firstAttribute="trailing" secondItem="Yp8-gv-6Kq" secondAttribute="trailing" constant="25" id="ytz-XJ-ryu"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="delete" destination="pDn-7w-uEK" id="5YI-4Y-DdW"/>
-                                            <outlet property="name" destination="yr4-5s-unL" id="pMH-c3-2AP"/>
+                                            <outlet property="address" destination="Yp8-gv-6Kq" id="r65-A5-eHE"/>
+                                            <outlet property="name" destination="ORp-HZ-F2e" id="YhC-aM-iUR"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -107,14 +97,30 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <navigationItem key="navigationItem" title="Title" id="7le-tk-vNE">
+                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="SXN-rK-cWa">
+                            <connections>
+                                <action selector="cancelWithSender:" destination="BYZ-38-t0r" id="KS6-zO-F6g"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Edit" id="onD-A3-NEE">
+                            <connections>
+                                <action selector="editWithSender:" destination="BYZ-38-t0r" id="gLv-Q9-dmH"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <outlet property="addList" destination="yb3-9Q-v8Y" id="0sa-En-mXJ"/>
                         <outlet property="arrowNav" destination="iKX-qs-qPH" id="v0I-r8-ePS"/>
+                        <outlet property="cancelButton" destination="SXN-rK-cWa" id="FTP-WA-rcK"/>
+                        <outlet property="editButton" destination="onD-A3-NEE" id="XRq-Tq-f1v"/>
                         <outlet property="listName" destination="0A8-aV-W39" id="zS4-s3-x8N"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="669.60000000000002" y="31.934032983508249"/>
         </scene>
         <!--List Items View Controller-->
         <scene sceneID="ntx-aK-KjD">

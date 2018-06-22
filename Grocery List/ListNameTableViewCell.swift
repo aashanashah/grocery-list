@@ -9,12 +9,10 @@
 import UIKit
 
 class ListNameTableViewCell: UITableViewCell {
-    @IBOutlet var name : UIButton!
-    @IBOutlet var listName : UITableView!
-    @IBOutlet var delete : UIButton!
+    @IBOutlet var name : UILabel!
+    @IBOutlet var address : UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
-        delete.isHidden = true
         // Initialization code
     }
 
