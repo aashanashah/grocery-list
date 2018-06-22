@@ -275,7 +275,7 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
         let cell:ListTableViewCell = self.listTable.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! ListTableViewCell
         cell.listText.addTarget(self, action: #selector(UITextFieldDelegate.textFieldDidEndEditing(_:)), for: UIControlEvents.editingDidEnd)
         cell.count.addTarget(self, action: #selector(UITextFieldDelegate.textFieldDidEndEditing(_:)), for: UIControlEvents.editingDidEnd)
-        listTable.reloadData()
+        //listTable.reloadData()
         var i=0
         while(i<listArray.count)
         {
@@ -324,7 +324,7 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
         cell.listText.resignFirstResponder()
         listTable.deleteRows(at: [indexPath!], with: UITableViewRowAnimation.automatic)
         listTable.endUpdates()
-        listTable.reloadData()
+        //listTable.reloadData()
     }
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool
     {

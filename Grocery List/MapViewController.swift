@@ -186,7 +186,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
                     let placeMark = placemarks!.last
                     if (placeMark?.name) != nil
                     {
-                        self.address.append((placeMark?.name!)! + ",")
+                        self.address.append((placeMark?.name!)!)
                         self.name = (placeMark?.name)!
                     }
                     self.saveAdd.setTitle("Current Location", for: .normal)
