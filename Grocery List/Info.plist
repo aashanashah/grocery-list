@@ -23,11 +23,12 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Will you allow this app to always use your location?</string>
+	<string>Your location is used to find out if you are in the vicinity of your favorite selected store.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Will you allow this app to use your location when in use?</string>
+	<string>Your location is used to find out if you are in the vicinity of your favorite selected store.</string>
 	<key>UIBackgroundModes</key>
 	<array>
+		<string>fetch</string>
 		<string>location</string>
 	</array>
 	<key>UILaunchStoryboardName</key>

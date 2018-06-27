@@ -53,6 +53,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
             {
                 locationManager.delegate = self as CLLocationManagerDelegate
                 locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+                locationManager.allowsBackgroundLocationUpdates = true
                 locationManager.startUpdatingLocation()
             }
             currLocFlag = 0
@@ -72,6 +73,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
             {
                 locationManager.delegate = self as CLLocationManagerDelegate
                 locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+                locationManager.allowsBackgroundLocationUpdates = true
                 locationManager.startUpdatingLocation()
             }
             mapView.delegate = self
