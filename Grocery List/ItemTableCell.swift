@@ -11,7 +11,6 @@ import UIKit
 class ItemTableCell: UITableViewCell {
     @IBOutlet var itemName : UILabel!
     @IBOutlet var quantity : UILabel!
-    @IBOutlet var srno : UILabel!
 
     override func awakeFromNib() {
         super.awakeFromNib()

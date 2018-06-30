@@ -150,23 +150,23 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
         
         return footerView
     }
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView?
-    {
-        let cellI:ItemTableCell = self.itemTable.dequeueReusableCell(withIdentifier: cellReuseId) as! ItemTableCell
-        if tableView == itemTable
-        {
-            cellI.backgroundColor = UIColor.cyan
-            cellI.srno.text = "Sr.no";
-            cellI.itemName.text = "Item Name"
-            cellI.quantity.text = "Qty"
-            cellI.isHidden = false
-        }
-        else
-        {
-            cellI.isHidden = true
-        }
-        return cellI
-    }
+//    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView?
+//    {
+//        let cellI:ItemTableCell = self.itemTable.dequeueReusableCell(withIdentifier: cellReuseId) as! ItemTableCell
+//        if tableView == itemTable
+//        {
+//            cellI.backgroundColor = UIColor.cyan
+//            cellI.srno.text = "Sr.no";
+//            cellI.itemName.text = "Item Name"
+//            cellI.quantity.text = "Qty"
+//            cellI.isHidden = false
+//        }
+//        else
+//        {
+//            cellI.isHidden = true
+//        }
+//        return cellI
+//    }
     @IBAction func onCLickLocate(sender : UIButton)
     {
         let mapViewController = self.storyboard?.instantiateViewController(withIdentifier: "MapViewController") as! MapViewController
@@ -205,9 +205,8 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
     
             cell.listText.text = listArray[indexPath.row]
             cell.count.text = countArr[indexPath.row]
-            cellI.itemName.text = listArray[indexPath.row]
-            cellI.quantity.text = countArr[indexPath.row]
-            cellI.srno.text = "\(indexPath.row+1)."
+            cellI.itemName.text = "\(indexPath.row+1). \(listArray[indexPath.row])"
+        cellI.quantity.text = "Quantity : \(countArr[indexPath.row])"
             cell.addButton.addTarget(self, action:#selector(onaddRow(sender:)), for: .touchUpInside)
             cell.delButton.addTarget(self, action:#selector(ondelRow(sender:)), for: .touchUpInside)
             cell.listText.addTarget(self, action: #selector(UITextFieldDelegate.textFieldDidEndEditing(_:)), for: UIControlEvents.editingDidEnd)
@@ -359,7 +358,7 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
     {
         if tableView == itemTable
         {
-            return 50
+            return UITableViewAutomaticDimension
         }
         return 150
     }
@@ -374,6 +373,7 @@ class ListItemsViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     @IBAction func updateList(sender : UIButton)
     {
+        data = [Dictionary<String,String>]()
         var i=0
         listTable.endEditing(true)
         if addItems.isHidden == false
