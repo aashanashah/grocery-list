@@ -1,4 +1,4 @@
-# Grocery-List
+# Geotify
 
 Creating a grocery list and locating the store made easy -  An ingenious solution to the sticky notes and overwhelming lists of items.
 Shopping list app: Comes with an option to add desired store  with multiple lists without the need of memorizing which items to shop from which store. Also, the notifications will handle the display of the respective list when you are in the vicinity of the store and you will have your list handy and ready before you even step in the store.
@@ -20,11 +20,17 @@ Disclaimer: Continued use of GPS running in the background can dramatically decr
 
 # Screenshots
 
+![](Screenshots/geotify1.jpg) 
 
+![](Screenshots/geotify2.jpg) 
 
+![](Screenshots/geotify3.jpg) 
 
+![](Screenshots/geotify4.jpg) 
 
+![](Screenshots/geotify5.jpg) 
 
+![](Screenshots/geotify6.jpg) 
 
 
 # Requirements
